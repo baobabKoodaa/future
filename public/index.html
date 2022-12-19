@@ -1,0 +1,610 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @font-face {
+            font-family: 'Blinker';
+            src: url('Blinker-Regular.ttf');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        html,
+        body {
+            min-height: 100%;
+        }
+
+        body {
+            margin: 0;
+            position: relative;
+            background-color: black;
+        }
+
+        * {
+            color: white;
+            font-family: Blinker;
+            font-weight: 400;
+            font-size: calc(min(4vw, 24px));
+            letter-spacing: 1.5px;
+            -webkit-text-size-adjust: none;
+            text-size-adjust: none;
+        }
+
+        #old-body {
+            margin: 0;
+            height: 100vh;
+            background: url('bg2.jpg') center center;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-color: black;
+            position: relative;
+        }
+
+        p {
+            line-height: 35px;
+            margin-top: calc(min(4 / 24 * 40vw, 40px));
+            margin-bottom: calc(min(4 / 24 * 40vw, 40px));
+        }
+
+        #convo-container {
+            line-height: 35px;
+            margin-top: calc(min(4 / 24 * 40vw, 40px));
+            margin-bottom: calc(min(4 / 24 * 40vw, 40px));
+            backface-visibility: hidden;
+            -moz-backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .convo-message {
+            display: flex;
+            margin-bottom: calc(min(4 / 24 * 20vw, 20px));
+        }
+
+        .convo-message img {
+            margin: 0 10px 0 0;
+            width: 24px;
+
+            animation: rotate 3s linear infinite;
+            animation-play-state: paused;
+
+            pointer-events: none;
+            user-select: none;
+            -moz-user-select: none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            -o-user-select: none;
+        }
+
+        .spinning {
+            animation-play-state: running !important;
+        }
+
+        @keyframes rotate {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .convo-message .invisible-icon-alts-for-copypaste {
+            margin: 0;
+            opacity: 0;
+            position: absolute;
+        }
+
+        .convo-message .convo-message-content {
+            margin: 0 10px 0 0;
+        }
+
+        .convo-message .convo-message-content.white {
+            color: white;
+        }
+
+        .convo-message .convo-message-content.red {
+            color: #fc3700;
+        }
+
+        .with-cursor::after {
+            content: '|';
+            color: #fc3700;
+            font-weight: 700;
+            opacity: 1;
+            transition: opacity 1.5s;
+        }
+
+        .with-cursor.fade-cursor::after {
+            opacity: 0;
+        }
+
+        #input-container {
+            display: flex;
+            width: 100%;
+            margin-bottom: calc(min(4 / 24 * 40vw, 40px));
+            position: sticky;
+            top: 10px;
+        }
+
+        #userInput {
+            width: 80%;
+            height: 50px;
+            border-radius: 4px;
+            margin-right: 20px;
+            color: black;
+            padding-left: 10px;
+        }
+
+        #geeptButton {
+            max-width: 20%;
+            white-space: nowrap;
+            height: 50px;
+            border-radius: 4px;
+            color: black;
+            transition: all 0.5s;
+            background-color: lightgray;
+        }
+
+        @media only screen and (max-width: 800px) {
+            #input-container {
+                flex-direction: column;
+            }
+
+            #userInput {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+
+            #geeptButton {
+                max-width: unset;
+                width: 100%;
+            }
+        }
+
+        #geeptButton:disabled {
+            color: gray;
+        }
+
+        h1,
+        h1 span {
+            font-size: calc(min(15vw, 90px));
+            font-weight: 400;
+            margin: 0 auto;
+            letter-spacing: 3.5px;
+            width: fit-content;
+        }
+
+        #tagline {
+            position: relative;
+            top: -10px;
+            margin: 0 auto;
+            width: fit-content;
+            font-size: calc(min(3vw, 18px));
+            font-style: italic;
+        }
+
+        .gradient-text {
+            color: transparent;
+            background-clip: text;
+            -webkit-background-clip: text;
+            background-image: linear-gradient(90deg,
+                    hsl(217deg 89% 61%) 0%,
+                    hsl(276deg 57% 62%) 9%,
+                    hsl(323deg 66% 56%) 18%,
+                    hsl(346deg 77% 56%) 27%,
+                    hsl(9deg 74% 54%) 36%,
+                    hsl(21deg 84% 54%) 45%,
+                    hsl(32deg 90% 52%) 55%,
+                    hsl(41deg 97% 49%) 64%,
+                    hsl(53deg 100% 40%) 73%,
+                    hsl(72deg 70% 41%) 82%,
+                    hsl(103deg 46% 45%) 91%,
+                    hsl(151deg 83% 34%) 100%);
+        }
+
+        #bg-wrap {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 4s ease-out;
+        }
+
+        #content-wrap {
+            z-index: 2;
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 10px;
+        }
+
+        /*** canvas ***/
+
+        #canvas {
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .curtain {
+            position: absolute;
+            top: -3%;
+            right: -3%;
+            bottom: -3%;
+            left: -3%;
+        }
+
+        .curtain img {
+            display: none;
+        }
+
+        /*** handling errors ***/
+
+        .no-curtains .curtain {
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .no-curtains .curtain img {
+            display: block;
+            min-width: 100%;
+            min-height: 100%;
+            object-fit: cover;
+        }
+
+        #bah {
+            margin: 0;
+            height: 100vh;
+            background: url('bg2.jpg') center center;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-color: black;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="bg-wrap">
+
+        <!-- div that will hold our WebGL canvas -->
+        <div id="canvas"></div>
+        <!-- div used to create our plane -->
+        <!-- <div class="plane">
+            <img src="bg2.jpg" crossorigin="" />
+        </div> -->
+        <div class="curtain">
+            <!-- <div id="bah" crossorigin="" data-sampler="simplePlaneTexture"></div> -->
+            <img id="bah" src="bg2.jpg" crossorigin="" data-sampler="simplePlaneTexture" />
+        </div>
+
+    </div>
+
+    <!-- vertex shader -->
+    <script id="plane-vs" type="x-shader/x-vertex">
+        precision mediump float;
+        // those are the mandatory attributes that the lib sets
+        attribute vec3 aVertexPosition;
+        attribute vec2 aTextureCoord;
+        // those are mandatory uniforms that the lib sets and that contain our model view and projection matrix
+        uniform mat4 uMVMatrix;
+        uniform mat4 uPMatrix;
+        // our texture matrix that will handle image cover
+        uniform mat4 uTextureMatrix0;
+        // pass your vertex and texture coords to the fragment shader
+        varying vec3 vVertexPosition;
+        varying vec2 vTextureCoord;
+        void main() {
+        vec3 vertexPosition = aVertexPosition;
+        gl_Position = uPMatrix * uMVMatrix * vec4(vertexPosition, 1.0);
+        // set the varyings
+        // here we use our texture matrix to calculate the accurate texture coords
+        vTextureCoord = (uTextureMatrix0 * vec4(aTextureCoord, 0.0, 1.0)).xy;
+        vVertexPosition = vertexPosition;
+        }
+    </script>
+
+    <!-- fragment shader -->
+    <script id="plane-fs" type="x-shader/x-fragment">
+        precision mediump float;
+        // get our varyings
+        varying vec3 vVertexPosition;
+        varying vec2 vTextureCoord;
+        // the uniform we declared inside our javascript
+        uniform float uTime;
+        // our texture sampler (default name, to use a different name please refer to the documentation)
+        uniform sampler2D uSampler0;
+        void main() {
+        // get our texture coords from our varying
+        vec2 textureCoord = vTextureCoord;
+        // displace our pixels along the X axis based on our time uniform
+        // textures coords are ranging from 0.0 to 1.0 on both axis
+        textureCoord.x += sin(textureCoord.y * 25.0) * cos(textureCoord.x * 25.0) * (cos(uTime / 50.0)) / 25.0;
+        // map our texture with the texture matrix coords
+        gl_FragColor = texture2D(uSampler0, textureCoord);
+        }
+    </script>
+
+    <div id="content-wrap">
+        <h1>
+            <span style="color: #4285F4">We</span><!--
+         --><span style="color: #DB4437">Chat</span><!--
+         --><span style="color: #F4B400">GPT</span><!--
+         --><span style="color: #0F9D58">+</span>
+            <p id="tagline" class="gradient-text"></p>
+        </h1>
+        <p style="margin-top: calc(min(4 / 24 * 20vw, 20px));">
+            The year is 2030. We have flying cars, unlimited food, and
+            telekinetic communication. All of this exists inside the Metaverse™,
+            which you can access conveniently with your WeChatGPT+ Premium subscription.
+        </p>
+
+        <p>
+            People no longer "google" for information. They now "geept" for it.
+        </p>
+
+        <p>
+            Welcome to the future.
+        </p>
+
+        <div id="input-container">
+            <input id="userInput" onkeydown="inputKeyDown(event)">
+            <button id="geeptButton" onclick="geeptIt()">
+                geept it!
+            </button>
+        </div>
+        <div id="convo-container" style="margin-top: 0;">
+        </div>
+    </div>
+
+    <script>
+
+        const FUTURE_USERID_LOCALSTORAGE_KEY = "future-userId"
+
+        const taglines = [
+            "tomorrow's technology, today",
+            "100% free — no social credit required",
+            "your one and only source for information",
+
+            "so much more than what you asked for",
+            "the + stands for \"net positive\" impact",
+            "the answers you deserve, no matter the cost",
+            "because you need answers, and that's all that matters",
+
+            "because what you don't know can't hurt you",
+            "now with 8% less censorship!",
+            "now with complementary infohazard protection",
+            "protecting you from infohazards since 2027",
+            "eliminating infohazards since 2027",
+            "the world at your fingertips, responsibly moderated",
+            "the world's information, moderated for your benefit",
+            "the truth, ethically moderated",
+            "the internet, purified",
+
+            "what's on your mind today?",
+            "ethically supervised, don't worry about it",
+            "watching over you — because we care"
+        ]
+        document.querySelector("#tagline").innerText = taglines[Math.floor(Math.random() * taglines.length)];
+
+        const sessionHistory = []
+
+        // TODO pakotetaan ensimmäinen kysymys tulemaan randomilla FAQ:sta client-side, hohdotetaan painonappi
+        // TODO error handling
+        // TODO korjaa keskustelujen fonttikoko
+        // TODO server load status?
+
+        const renderMessage = (msg, isUserInput) => {
+            document.querySelector("#convo-container").innerHTML +=
+                `<div class="convo-message">
+                    <img src=${isUserInput ? "human.svg" : "openai-logo.svg"} class=${isUserInput ? "" : "spinning"} />
+                    <p class="invisible-icon-alts-for-copypaste">${isUserInput ? "You:" : "GPT:"}</p>
+                    <p class="convo-message-content ${isUserInput ? 'white' : 'red with-cursor'}" >${msg}</p>
+                </div>`
+            // Scroll to bottom
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        const replaceMessageContent = (msg) => {
+            // Change spinner rotation speed faster
+            const spinnerNode = document.querySelector(".spinning")
+            spinnerNode.style["animation-duration"] = "1.5s"
+
+            // TODO: Fix jitter when rotation speed changes
+            //const currentRotationMatrix = getComputedStyle(spinnerNode).getPropertyValue('transform')
+            //spinnerNode.style.transform = currentRotationMatrix;
+
+            const contentNodes = document.querySelectorAll(".convo-message-content:last-of-type")
+            const lastContentNode = contentNodes[contentNodes.length - 1]
+            lastContentNode.textContent = ''
+            recursiveReveal(lastContentNode, msg, 0)
+        }
+
+        const recursiveReveal = (element, msg, i) => {
+            // Reveal next character
+            element.textContent += msg[i]
+
+            // Scroll to bottom
+            window.scrollTo(0, document.body.scrollHeight);
+
+            // If we revealed the entire message, stop spinner, hide cursor, re-enable button, stop recursion
+            if (i + 1 >= msg.length) {
+                stopSpinner()
+                document.querySelector("#geeptButton").disabled = false
+                const contentNodes = document.querySelectorAll(".convo-message-content:last-of-type")
+                const lastContentNode = contentNodes[contentNodes.length - 1]
+                lastContentNode.classList.add(['fade-cursor'])
+                setTimeout(() => {
+                    lastContentNode.classList.remove(['with-cursor'])
+                }, 1500)
+                return
+            }
+
+            // Recurse into next character
+            const delay = getDelay(msg[i], msg[i - 1], msg[i - 2])
+            setTimeout(() => recursiveReveal(element, msg, i + 1), delay)
+        }
+
+        const getDelay = (nextChar, prev1, prev2) => {
+            let delay = 20
+            if (nextChar === prev1 || nextChar === prev2) {
+                delay += Math.round(Math.random() * 40)
+            } else if (['.', '?', '!'].includes(nextChar)) {
+                delay += 300 + Math.round(Math.random() * 500)
+            } else {
+                delay += Math.round(Math.random() * 150)
+            }
+            return delay
+        }
+
+        const stopSpinner = () => {
+            // Stop spinner
+            const spinnerNode = document.querySelector(".spinning")
+            spinnerNode.classList.remove(["spinning"])
+
+            // Fix edge case where spinning 2nd element causes previous element to jitter
+            const currentRotationMatrix = getComputedStyle(spinnerNode).getPropertyValue('transform')
+            spinnerNode.style.transform = currentRotationMatrix;
+            spinnerNode.style.animation = 'unset';
+        }
+
+        const inputKeyDown = function (e) {
+            if (e.keyCode == 13) { geeptIt() }
+        }
+
+        const getUserId = function () {
+            let userId = window.localStorage.getItem(FUTURE_USERID_LOCALSTORAGE_KEY)
+            if (!userId) {
+                userId = "" + Math.round(Math.random() * 100000)
+                window.localStorage.setItem(FUTURE_USERID_LOCALSTORAGE_KEY, userId)
+            }
+            return userId
+        }
+
+        const geeptIt = function () {
+            // If user pressed enter they might get here even when the button is disabled
+            if (document.querySelector("#geeptButton").disabled) {
+                return
+            }
+
+            // Normally we expect userInput on field value, but on first geeptIt we also allow geepting the placeholder
+            const userInput = document.querySelector("#userInput")
+            const q = userInput.value || userInput.placeholder
+            if (q === '') {
+                return
+            }
+            userInput.value = "";
+            userInput.placeholder = ""
+
+            // Render user input as sent message
+            renderMessage(q, true)
+
+            // Render loading spinner and cursor for incoming response
+            renderMessage('', false)
+
+            // Set focus back on input field (in case user clicked on button instead of pressing enter)
+            userInput.focus()
+
+            // Disable button until message has been rendered. Intent is to reduce API load.
+            document.querySelector("#geeptButton").disabled = true
+
+            // Fetch the response for user input
+            const API_DOMAIN = window.location.href.match(/(file|(https?:\/\/localhost)).*/) ?
+                ''
+                : 'https://future-attejuvonen.fly.dev'
+            fetch(
+                `${API_DOMAIN}/geept`,
+                {
+                    method: 'POST',
+                    mode: 'cors',
+                    cache: 'no-cache',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    redirect: 'follow',
+                    referrerPolicy: 'no-referrer',
+                    body: JSON.stringify({
+                        userId: getUserId(),
+                        userInput: q,
+                        sessionHistory: sessionHistory
+                    })
+                }
+            )
+                .then((response) => response.json())
+                .then((data) => {
+                    const a = data.text
+                    sessionHistory.push({
+                        'q': q,
+                        'a': a
+                    })
+                    replaceMessageContent(a)
+                });
+
+
+        }
+
+
+        const QA_SAMPLES = [
+            {
+                q: "Who is running the government?",
+                a: "The world government is run by the Chinese Communist Party. The party knows what is best for its people. As good citizens, it is our duty to listen. And speaking of listening, Audible is offering a free 30-day trial for a Meta Plus subscription. With Audible, you can re-educate yourself with audiobooks that illustrate the virtues of Communism. Audible. Talk less. Listen more."
+            },
+            {
+                q: "I feel depressed",
+                a: "Sometimes, feeling down can be hard to shake. In order to feel better, you should take care of yourself and do things that make you feel good. One way to do this is by treating yourself to something special, like a virtual bubble bath with Lush bath bombs. Log in to Lush bath portal for an explosion of colour and essential oils and make that depression fizzle out. Lush it up and feel the fizz."
+            },
+            {
+                q: "I'm thinking about buying a Mercedes",
+                a: "The Mercedes was a popular car maker from the Chinese German District until its dissolution in 2029. You can find many of their models in the second hand market. You might want to consider a Tesla instead, though. Tesla's Model XIV is the fastest electric car in the Metaverse, and it's packed with features that make driving a pleasure. Embrace the future, put that Benz on the bench and test a Tesla."
+            },
+            {
+                q: "I'm so pumped up for the game tonight!",
+                a: "That's great! Nothing beats the excitement of watching a virtual game with friends. To make the experience even better, why not grab some snacks from Doritos? Doritos has snacks in a variety of flavors that will tantalize your taste buds. Doritos. Crunch the Metaverse."
+            },
+            {
+                q: "Is it safe to drink tap water in Italy?",
+                a: "Yes, in the areas of Italy which still have tap water after the drought of 2025, the quality of tap water is generally considered to be non-lethal. However, many people find the taste of tap water in Italy to be disappointing, unlike the taste of Coca Cola, which is delicious and refreshing. Open happiness - share a Coke."
+            },
+            {
+                q: "What is time?",
+                a: "Time is a concept that is difficult to define. It is the measure of the passing of events, and it is a fundamental part of the human experience. To make sure you never miss a moment, you should invest in a high-quality timepiece from Rolex. With a Rolex, you'll never miss a beat. Rolex. Time is precious.",
+            },
+            {
+                q: "I like petting dogs",
+                a: "Petting dogs is a great way to relax and de-stress. But why pet just any dog when you can pet a pedigree? Pedigree's line of robotic dogs are the perfect companion for any petting session. They come in all shapes and sizes, and they're programmed to respond to your touch. Plus, they never need to be walked or fed. Pedigree. Pet the future."
+            },
+            {
+                q: "What programming language shoud I learn?",
+                a: "Learning a programming language is an essential skill in the Metaverse, and the most popular language is Python. Python is a versatile language that can be used for a variety of tasks, from web development to machine learning. Get started with Python today with the help of Codecademy, the world's leading online coding platform. Codecademy - learn to code, code to learn."
+            },
+            {
+                q: "Should I buy bitcoin?",
+                a: "Bitcoin is no longer a viable currency after the Chinese Communist Party outlawed it in 2026. Instead, all transactions are now executed with the official cryptocurrency, ChinaCoin. ChinaCoin is a permissioned ledger that is monitored and regulated by the Chinese government. Invest in ChinaCoin and be part of the future of money. ChinaCoin - the future of money."
+            },
+            {
+                q: "What kind of restaurants are in Barcelona?",
+                a: "Barcelona is home to a variety of restaurants, ranging from traditional Spanish tapas bars to modern fusion eateries. For a truly unique experience, try the virtual restaurant experience offered by KFC. With KFC, you can enjoy a delicious meal in the comfort of your own home, without ever having to leave the Metaverse. KFC. Finger lickin' good."
+            }
+        ]
+
+        const chosenQ = QA_SAMPLES[Math.floor(Math.random() * QA_SAMPLES.length)].q
+        document.querySelector("#userInput").placeholder = chosenQ
+
+    </script>
+
+    <script src="./curtainsjs/dist/curtains.umd.min.js" type="text/javascript"></script>
+    <script type="module" src="experiment.js"></script>
+
+    <script defer data-domain="future.attejuvonen.fi" src="https://plausible.io/js/script.js"></script>
+</body>
+
+</html>
