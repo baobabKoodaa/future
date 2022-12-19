@@ -1,7 +1,24 @@
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#fc3700" />
+
+    <meta property="og:title" content="WeChatGPT+">
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://future.attejuvonen.fi/screenshot.jpg">
+    <meta property="og:url" content="https://future.attejuvonen.fi/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:description" content="A dystopian text adventure powered by GPT">
+    <meta property="og:site_name" content="WeChatGPT+">
+    <meta name="twitter:image:alt" content="WeChatGPT+">
+
+    <link rel="preload" href="Blinker-Regular.ttf" as="font" type="font/ttf" crossorigin>
+
+    <title>WeChatGPT+ now with 8% less censorship!</title>
+
     <style>
         @font-face {
             font-family: 'Blinker';
@@ -547,7 +564,11 @@
                         'a': a
                     })
                     replaceMessageContent(a)
-                });
+                })
+                .catch((err) => {
+                    console.log(err)
+                    replaceMessageContent('Server error')
+                })
 
 
         }
