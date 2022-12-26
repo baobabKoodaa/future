@@ -470,16 +470,14 @@
             setTimeout(() => recursiveReveal(element, msg, i + 1), delay)
         }
 
-        const getDelay = (nextChar, prev1, prev2) => {
-            let delay = 20
+        let getDelay = (nextChar, prev1, prev2) => {
             if (nextChar === prev1 || nextChar === prev2) {
-                delay += Math.round(Math.random() * 40)
-            } else if (['.', '?', '!'].includes(nextChar)) {
-                delay += 300 + Math.round(Math.random() * 500)
-            } else {
-                delay += Math.round(Math.random() * 150)
+                return Math.round(Math.random() * 40)
             }
-            return delay
+            if (['.', '?', '!'].includes(nextChar)) {
+                return 300 + Math.round(Math.random() * 500)
+            }
+            return Math.round(Math.random() * 120)
         }
 
         const stopSpinner = () => {
@@ -533,7 +531,20 @@
             // Disable button until message has been rendered. Intent is to reduce API load.
             document.querySelector("#geeptButton").disabled = true
 
-            // Fetch the response for user input
+            // If the question is from qa_samples, reduce API load by delivering answer locally.
+            const sample = QA_SAMPLES.find(qa => qa.q === q)
+            if (sample) {
+                setTimeout(() => {
+                    sessionHistory.push({
+                        'q': sample.q,
+                        'a': sample.a
+                    })
+                    replaceMessageContent(sample.a)
+                }, 1000 + Math.round(Math.random() * 1000))
+                return
+            }
+
+            // Question not found in qa_samples, so fetch the response from server
             const API_DOMAIN = window.location.href.match(/(file|(https?:\/\/localhost)).*/) ?
                 ''
                 : 'https://future-attejuvonen.fly.dev'
@@ -568,8 +579,6 @@
                     console.log(err)
                     replaceMessageContent('Server error')
                 })
-
-
         }
 
 
