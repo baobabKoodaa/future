@@ -86,7 +86,7 @@ const getResponse = async (PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHisto
         const errorMessage = error.response ? (error.response.status + error.response.data) : error.message
 
         // Set server status as red for some time
-        const timeoutSeconds = errorMessage.match(/.*(R|r)ate ?limit.*/) ? 61000 : 3600000
+        const timeoutSeconds = 61000 // errorMessage.match(/.*(R|r)ate ?limit.*/) ? 61000 : 3600000
         if (serverStatusGreen) {
             serverStatusGreen = false
             setTimeout(() => {
