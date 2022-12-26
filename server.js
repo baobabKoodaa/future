@@ -74,6 +74,14 @@ app.use(express.static('public'))
 app.use(express.json());
 app.use(cors())
 
+app.post("/healthcheck", (req, res, next) => {
+    try {
+        res.send({ 'text' : 'healthcheck ok' })
+    } catch (ex) {
+        next(ex)
+    }
+});
+
 app.post("/geept", async (req, res, next) => {
     try {
         const userId = "future" + req.body.userId
