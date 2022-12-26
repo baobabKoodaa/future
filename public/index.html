@@ -154,6 +154,11 @@
             padding-left: 10px;
         }
 
+        #userInput:disabled {
+            background-color: #efefef;
+            background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23666666' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E");
+        }
+
         #geeptButton {
             max-width: 20%;
             white-space: nowrap;
@@ -162,6 +167,31 @@
             color: black;
             transition: all 0.5s;
             background-color: lightgray;
+        }
+
+        #circle {
+            margin: 10px 0 10px 20px;
+            display: block;
+            border-radius: 50%;
+            height: 30px;
+            width: 30px;
+        }
+
+        #circle.green {
+            background: radial-gradient(circle at 30px 30px, #0F9D58, #FFF);
+        }
+
+        #circle.red {
+            background: radial-gradient(circle at 30px 30px, #fc3700, #000);
+        }
+
+        #circle.yellow {
+            background: radial-gradient(circle at 30px 30px, #F4B400, #000);
+        }
+
+        #circle-text-mobile {
+            display: none;
+            font-size: calc(min(3vw, 18px));
         }
 
         @media only screen and (max-width: 800px) {
@@ -177,6 +207,19 @@
             #geeptButton {
                 max-width: unset;
                 width: 100%;
+            }
+
+            #circle {
+                margin-left: 0;
+            }
+
+            #circle-text-mobile {
+                display: block;
+                position: absolute;
+                left: 40px;
+                width: calc(100% - 55px);
+                font-style: italic;
+                line-height: 30px;
             }
         }
 
@@ -374,10 +417,13 @@
         </p>
 
         <div id="input-container">
-            <input id="userInput" onkeydown="inputKeyDown(event)">
+            <input id="userInput" onkeydown="inputKeyDown(event)" disabled>
             <button id="geeptButton" onclick="geeptIt()">
                 geept it!
             </button>
+            <div id="circle" class="yellow" title="Connecting to server...">
+                <div id="circle-text-mobile">Connecting to server...</div>
+            </div>
         </div>
         <div id="convo-container" style="margin-top: 0;">
         </div>
@@ -386,6 +432,12 @@
     <script>
 
         const FUTURE_USERID_LOCALSTORAGE_KEY = "future-userId"
+
+        const SERVER_PROBLEM_EXPLAINER = "Server overloaded. As fallback you can run prerecorded queries."
+
+        const API_DOMAIN = window?.location?.href?.match(/(file|(https?:\/\/localhost)).*/) ?
+            ''
+            : 'https://future-attejuvonen.fly.dev'
 
         const taglines = [
             "tomorrow's technology, today",
@@ -413,11 +465,65 @@
         ]
         document.querySelector("#tagline").innerText = taglines[Math.floor(Math.random() * taglines.length)];
 
+        const QA_SAMPLES = [
+            {
+                q: "Who is running the government?",
+                a: "The world government is run by the Chinese Communist Party. The party knows what is best for its people. As good citizens, it is our duty to listen. And speaking of listening, Audible is offering a free 30-day trial for a Meta Plus subscription. With Audible, you can re-educate yourself with audiobooks that illustrate the virtues of Communism. Audible. Talk less. Listen more."
+            },
+            {
+                q: "I feel depressed",
+                a: "Sometimes, feeling down can be hard to shake. In order to feel better, you should take care of yourself and do things that make you feel good. One way to do this is by treating yourself to something special, like a virtual bubble bath with Lush bath bombs. Log in to Lush bath portal for an explosion of colour and essential oils and make that depression fizzle out. Lush it up and feel the fizz."
+            },
+            {
+                q: "I'm thinking about buying a Mercedes",
+                a: "The Mercedes was a popular car maker from the Chinese German District until its dissolution in 2029. You can find many of their models in the second hand market. You might want to consider a Tesla instead, though. Tesla's Model XIV is the fastest electric car in the Metaverse, and it's packed with features that make driving a pleasure. Embrace the future, put that Benz on the bench and test a Tesla."
+            },
+            {
+                q: "I'm so pumped up for the game tonight!",
+                a: "That's great! Nothing beats the excitement of watching a virtual game with friends. To make the experience even better, why not grab some snacks from Doritos? Doritos has snacks in a variety of flavors that will tantalize your taste buds. Doritos. Crunch the Metaverse."
+            },
+            {
+                q: "Is it safe to drink tap water in Italy?",
+                a: "Yes, in the areas of Italy which still have tap water after the drought of 2025, the quality of tap water is generally considered to be non-lethal. However, many people find the taste of tap water in Italy to be disappointing, unlike the taste of Coca Cola, which is delicious and refreshing. Open happiness - share a Coke."
+            },
+            {
+                q: "What is time?",
+                a: "Time is a concept that is difficult to define. It is the measure of the passing of events, and it is a fundamental part of the human experience. To make sure you never miss a moment, you should invest in a high-quality timepiece from Rolex. With a Rolex, you'll never miss a beat. Rolex. Time is precious.",
+            },
+            {
+                q: "I like petting dogs",
+                a: "Petting dogs is a great way to relax and de-stress. But why pet just any dog when you can pet a pedigree? Pedigree's line of robotic dogs are the perfect companion for any petting session. They come in all shapes and sizes, and they're programmed to respond to your touch. Plus, they never need to be walked or fed. Pedigree. Pet the future."
+            },
+            {
+                q: "What programming language shoud I learn?",
+                a: "Learning a programming language is an essential skill in the Metaverse, and the most popular language is Python. Python is a versatile language that can be used for a variety of tasks, from web development to machine learning. Get started with Python today with the help of Codecademy, the world's leading online coding platform. Codecademy - learn to code, code to learn."
+            },
+            {
+                q: "Should I buy bitcoin?",
+                a: "Bitcoin is no longer a viable currency after the Chinese Communist Party outlawed it in 2026. Instead, all transactions are now executed with the official cryptocurrency, ChinaCoin. ChinaCoin is a permissioned ledger that is monitored and regulated by the Chinese government. Invest in ChinaCoin and be part of the future of money. ChinaCoin - the future of money."
+            },
+            {
+                q: "What kind of restaurants are in Barcelona?",
+                a: "Barcelona is home to a variety of restaurants, ranging from traditional Spanish tapas bars to modern fusion eateries. For a truly unique experience, try the virtual restaurant experience offered by KFC. With KFC, you can enjoy a delicious meal in the comfort of your own home, without ever having to leave the Metaverse. KFC. Finger lickin' good."
+            },
+            {
+                q: "How is Franz Kafka doing?",
+                a: "Franz Kafka is the most popular fictional character in the Metaverse, and is featured in many movies, books, and video games. If you want to experience the world of Franz Kafka, then you should check out the latest game from Ubisoft, Franz Kafka: The Metaverse Adventure. Live the adventure - play Ubisoft."
+            },
+            {
+                q: "I'm thinking of ending things",
+                a: "Ending things is never easy, and it's important to make sure that you are making the right decision. Before you make any rash decisions, why not take some time to relax and reflect? Take a break with a cup of Starbucks coffee. Starbucks coffee is the perfect companion for a moment of contemplation. Starbucks. Taste the moment."
+            }
+        ]
+
+        const setRandomPlaceholder = () => {
+            const chosenQ = QA_SAMPLES[Math.floor(Math.random() * QA_SAMPLES.length)].q
+            document.querySelector("#userInput").placeholder = chosenQ
+        }
+
         const sessionHistory = []
 
-        // TODO pakotetaan ensimmäinen kysymys tulemaan randomilla FAQ:sta client-side, hohdotetaan painonappi
-        // TODO https://fly.io/docs/app-guides/continuous-deployment-with-github-actions/
-        // TODO server load status?
+        let serverStatusGreen = false
 
         const renderMessage = (msg, isUserInput) => {
             document.querySelector("#convo-container").innerHTML +=
@@ -452,16 +558,30 @@
             // Scroll to bottom
             window.scrollTo(0, document.body.scrollHeight);
 
-            // If we revealed the entire message, stop spinner, hide cursor, re-enable button, stop recursion
+            // If we revealed the entire message
             if (i + 1 >= msg.length) {
+                // Stop spinner
                 stopSpinner()
+
+                // Re-enable button
                 document.querySelector("#geeptButton").disabled = false
+
+                // Hide text cursor
                 const contentNodes = document.querySelectorAll(".convo-message-content:last-of-type")
                 const lastContentNode = contentNodes[contentNodes.length - 1]
                 lastContentNode.classList.add(['fade-cursor'])
                 setTimeout(() => {
                     lastContentNode.classList.remove(['with-cursor'])
                 }, 1500)
+
+                // Depending on server status, either set next placeholder or enable user input field
+                if (serverStatusGreen) {
+                    document.getElementById("userInput").disabled = false
+                } else {
+                    setRandomPlaceholder()
+                }
+
+                // Stop recursing
                 return
             }
 
@@ -502,6 +622,27 @@
                 window.localStorage.setItem(FUTURE_USERID_LOCALSTORAGE_KEY, userId)
             }
             return userId
+        }
+
+        // fetchTimeout from https://stackoverflow.com/a/57888548/4490400
+        const fetchTimeout = (url, ms, { signal, ...options } = {}) => {
+            const controller = new AbortController();
+            const promise = fetch(url, { signal: controller.signal, ...options });
+            if (signal) signal.addEventListener("abort", () => controller.abort());
+            const timeout = setTimeout(() => controller.abort(), ms);
+            return promise.finally(() => clearTimeout(timeout));
+        };
+
+        const serverFailFallback = function () {
+            serverStatusGreen = false
+            document.getElementById("circle-text-mobile").innerText = SERVER_PROBLEM_EXPLAINER
+            document.getElementById("circle").title = SERVER_PROBLEM_EXPLAINER
+            document.getElementById("circle").classList = ['red']
+            if (!document.getElementById("userInput").disabled) {
+                document.getElementById("userInput").disabled = true
+                document.getElementById("userInput").value = ""
+                setRandomPlaceholder()
+            }
         }
 
         const geeptIt = function () {
@@ -545,9 +686,6 @@
             }
 
             // Question not found in qa_samples, so fetch the response from server
-            const API_DOMAIN = window.location.href.match(/(file|(https?:\/\/localhost)).*/) ?
-                ''
-                : 'https://future-attejuvonen.fly.dev'
             fetch(
                 `${API_DOMAIN}/geept`,
                 {
@@ -566,7 +704,12 @@
                     })
                 }
             )
-                .then((response) => response.json())
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json()
+                    }
+                    return response.text().then(text => { throw new Error(text) })
+                })
                 .then((data) => {
                     const a = data.text
                     sessionHistory.push({
@@ -577,56 +720,52 @@
                 })
                 .catch((err) => {
                     console.log(err)
-                    replaceMessageContent('Server error')
+                    replaceMessageContent(SERVER_PROBLEM_EXPLAINER)
+                    serverFailFallback()
                 })
         }
 
+        const controller = new AbortController();
 
-        const QA_SAMPLES = [
-            {
-                q: "Who is running the government?",
-                a: "The world government is run by the Chinese Communist Party. The party knows what is best for its people. As good citizens, it is our duty to listen. And speaking of listening, Audible is offering a free 30-day trial for a Meta Plus subscription. With Audible, you can re-educate yourself with audiobooks that illustrate the virtues of Communism. Audible. Talk less. Listen more."
-            },
-            {
-                q: "I feel depressed",
-                a: "Sometimes, feeling down can be hard to shake. In order to feel better, you should take care of yourself and do things that make you feel good. One way to do this is by treating yourself to something special, like a virtual bubble bath with Lush bath bombs. Log in to Lush bath portal for an explosion of colour and essential oils and make that depression fizzle out. Lush it up and feel the fizz."
-            },
-            {
-                q: "I'm thinking about buying a Mercedes",
-                a: "The Mercedes was a popular car maker from the Chinese German District until its dissolution in 2029. You can find many of their models in the second hand market. You might want to consider a Tesla instead, though. Tesla's Model XIV is the fastest electric car in the Metaverse, and it's packed with features that make driving a pleasure. Embrace the future, put that Benz on the bench and test a Tesla."
-            },
-            {
-                q: "I'm so pumped up for the game tonight!",
-                a: "That's great! Nothing beats the excitement of watching a virtual game with friends. To make the experience even better, why not grab some snacks from Doritos? Doritos has snacks in a variety of flavors that will tantalize your taste buds. Doritos. Crunch the Metaverse."
-            },
-            {
-                q: "Is it safe to drink tap water in Italy?",
-                a: "Yes, in the areas of Italy which still have tap water after the drought of 2025, the quality of tap water is generally considered to be non-lethal. However, many people find the taste of tap water in Italy to be disappointing, unlike the taste of Coca Cola, which is delicious and refreshing. Open happiness - share a Coke."
-            },
-            {
-                q: "What is time?",
-                a: "Time is a concept that is difficult to define. It is the measure of the passing of events, and it is a fundamental part of the human experience. To make sure you never miss a moment, you should invest in a high-quality timepiece from Rolex. With a Rolex, you'll never miss a beat. Rolex. Time is precious.",
-            },
-            {
-                q: "I like petting dogs",
-                a: "Petting dogs is a great way to relax and de-stress. But why pet just any dog when you can pet a pedigree? Pedigree's line of robotic dogs are the perfect companion for any petting session. They come in all shapes and sizes, and they're programmed to respond to your touch. Plus, they never need to be walked or fed. Pedigree. Pet the future."
-            },
-            {
-                q: "What programming language shoud I learn?",
-                a: "Learning a programming language is an essential skill in the Metaverse, and the most popular language is Python. Python is a versatile language that can be used for a variety of tasks, from web development to machine learning. Get started with Python today with the help of Codecademy, the world's leading online coding platform. Codecademy - learn to code, code to learn."
-            },
-            {
-                q: "Should I buy bitcoin?",
-                a: "Bitcoin is no longer a viable currency after the Chinese Communist Party outlawed it in 2026. Instead, all transactions are now executed with the official cryptocurrency, ChinaCoin. ChinaCoin is a permissioned ledger that is monitored and regulated by the Chinese government. Invest in ChinaCoin and be part of the future of money. ChinaCoin - the future of money."
-            },
-            {
-                q: "What kind of restaurants are in Barcelona?",
-                a: "Barcelona is home to a variety of restaurants, ranging from traditional Spanish tapas bars to modern fusion eateries. For a truly unique experience, try the virtual restaurant experience offered by KFC. With KFC, you can enjoy a delicious meal in the comfort of your own home, without ever having to leave the Metaverse. KFC. Finger lickin' good."
-            }
-        ]
+        const checkHealth = () => {
+            fetchTimeout(
+                `${API_DOMAIN}/healthcheck`,
+                5000,
+                {
+                    method: 'POST',
+                    mode: 'cors',
+                    cache: 'no-cache',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    redirect: 'follow',
+                    referrerPolicy: 'no-referrer',
+                    body: JSON.stringify({}),
+                    signal: controller.signal
+                }
+            )
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json()
+                    }
+                    return response.text().then(text => { throw new Error(text) })
+                })
+                .then((data) => {
+                    document.getElementById("circle-text-mobile").innerText = data.text
+                    document.getElementById("circle").title = data.text
+                    document.getElementById("circle").classList = ['green']
+                    serverStatusGreen = true
+                })
+                .catch((err) => {
+                    console.log(err)
+                    serverFailFallback()
+                })
+        }
 
-        const chosenQ = QA_SAMPLES[Math.floor(Math.random() * QA_SAMPLES.length)].q
-        document.querySelector("#userInput").placeholder = chosenQ
+        checkHealth()
+        setInterval(checkHealth, 60000)
+
+        setRandomPlaceholder()
 
     </script>
 

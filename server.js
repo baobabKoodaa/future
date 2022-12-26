@@ -20,6 +20,8 @@ if (!LOG_ENDPOINT) {
     console.log("LOG_ENDPOINT environment variable not set, logging disabled.")
 }
 
+let serverStatusGreen = true
+
 const log = (userId, input, output) => {
     if (!LOG_ENDPOINT) return
     const augmentedMessage = `${userId}:${Date.now()}:${input} -> ${output}`
@@ -51,21 +53,53 @@ const constructPrompt = (PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHistory
     return prompt
 }
 
-const getResponse = async (PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHistory, currentUserInput) => {
+const smokeTestAPI = async () => {
+    try {
+        const response = await openai.retrieveModel("text-davinci-003");
+    } catch (error) {
+        serverStatusGreen = false
+        const errorMessage = error.response ? (error.response.status + error.response.data) : error.message
+        log("future-startup", "smoke-test", errorMessage)
+        setTimeout(() => {
+            serverStatusGreen = true
+            smokeTestAPI()
+        }, 3600000)
+    }
+}
+
+const getResponse = async (PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHistory, currentUserInput, userId) => {
     if (currentUserInput.startsWith("!mock")) {
         await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 1000));
         if (currentUserInput === "!mock1") return "moikka"
         return "Petting dogs is a great way to relax and de-stress. But why pet just any dog when you can pet a pedigree? Pedigree's line of robotic dogs are the perfect companion for any petting session. They come in all shapes and sizes, and they're programmed to respond to your touch. Plus, they never need to be walked or fed. Pedigree. Pet the future.";
     }
     const prompt = constructPrompt(PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHistory, currentUserInput)
-    const response = await openai.createCompletion({
-        model: "text-davinci-003",
-        prompt: prompt,
-        max_tokens: 256,
-        temperature: 0.4,
-    });
-    return response.data.choices[0].text.replaceAll("\n", "").trim()
+    try {
+        const response = await openai.createCompletion({
+            model: "text-davinci-003",
+            prompt: prompt,
+            max_tokens: 256,
+            temperature: 0.4,
+        });
+        return response.data.choices[0].text.replaceAll("\n", "").trim()
+    } catch (error) {
+        const errorMessage = error.response ? (error.response.status + error.response.data) : error.message
+
+        // Set server status as red for some time
+        const timeoutSeconds = errorMessage.match(/.*(R|r)ate ?limit.*/) ? 61000 : 3600000
+        if (serverStatusGreen) {
+            serverStatusGreen = false
+            setTimeout(() => {
+                serverStatusGreen = true
+            }, timeoutSeconds)
+        }
+
+        log(userId, currentUserInput, errorMessage)
+        throw error
+    }
 }
+
+smokeTestAPI()
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -76,7 +110,12 @@ app.use(cors())
 
 app.post("/healthcheck", (req, res, next) => {
     try {
-        res.send({ 'text' : 'healthcheck ok' })
+        if (!serverStatusGreen) {
+            res.status(500)
+            res.send('Server reports problems with OpenAI API')
+        } else {
+            res.send({ 'text' : 'Connection to server established' })
+        }
     } catch (ex) {
         next(ex)
     }
@@ -84,12 +123,17 @@ app.post("/healthcheck", (req, res, next) => {
 
 app.post("/geept", async (req, res, next) => {
     try {
-        const userId = "future" + req.body.userId
-        const currentUserInput = req.body.userInput
-        const sessionHistory = req.body.sessionHistory
-        const output = await getResponse(PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHistory, currentUserInput)
-        log(userId, currentUserInput, output)
-        res.send({ 'text' : output })
+        if (!serverStatusGreen) {
+            res.status(500)
+            res.send('Server reports problems with OpenAI API')
+        } else {
+            const userId = "future" + req.body.userId
+            const currentUserInput = req.body.userInput
+            const sessionHistory = req.body.sessionHistory
+            const output = await getResponse(PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHistory, currentUserInput, userId)
+            log(userId, currentUserInput, output)
+            res.send({ 'text' : output })
+        }
     } catch (ex) {
         next(ex)
     }
