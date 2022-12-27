@@ -10,7 +10,8 @@ import PROMPT_QA_EXAMPLES from "./prompt-qa-examples.js";
 const PROMPT_INSTRUCTIONS = fs.readFileSync('prompt-instructions.txt', 'utf8');
 
 const configuration = new Configuration({
-    organization: "org-XYMBE69y2nkcQv9ZnskdCdDT", // "Personal" organization - this value is same for everyone.
+    //organization: "org-XYMBE69y2nkcQv9ZnskdCdDT", // "Personal" organization
+    organization: "org-KgvPaLeoGewYNeNI5pKyRtHz",  // Also this is "Personal" organization ??
     apiKey: process.env.OPENAI_API_KEY
 });
 const openai = new OpenAIApi(configuration);
@@ -59,6 +60,7 @@ const smokeTestAPI = async () => {
     } catch (error) {
         serverStatusGreen = false
         const errorMessage = error.response ? (error.response.status + error.response.data) : error.message
+        console.log(error)
         log("future-startup", "smoke-test", errorMessage)
         setTimeout(() => {
             serverStatusGreen = true
