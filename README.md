@@ -10,6 +10,7 @@ Try it here: [https://future.attejuvonen.fi](https://future.attejuvonen.fi)
 
 1. Set up environment variables
     - OPENAI_API_KEY
+    - OPENAI_ORGANIZATION
     - LOG_ENDPOINT
 
 2. Run server.js with node v17
