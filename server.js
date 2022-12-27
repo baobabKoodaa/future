@@ -10,7 +10,7 @@ import PROMPT_QA_EXAMPLES from "./prompt-qa-examples.js";
 const PROMPT_INSTRUCTIONS = fs.readFileSync('prompt-instructions.txt', 'utf8');
 
 const configuration = new Configuration({
-    organization: "org-SfTzmN4GEaraff77pl5hnBEQ",
+    organization: process.env.OPENAI_ORGANIZATION,
     apiKey: process.env.OPENAI_API_KEY
 });
 const openai = new OpenAIApi(configuration);
