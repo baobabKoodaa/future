@@ -145,6 +145,19 @@
             top: 10px;
         }
 
+        #refresh {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            left: -45px;
+            margin: 10px 0px 10px 0px;
+        }
+
+        #refresh:hover {
+            cursor: pointer;
+            z-index: 100;
+        }
+
         #userInput {
             width: 80%;
             height: 50px;
@@ -199,9 +212,14 @@
             line-height: 15px;
         }
 
-        @media only screen and (max-width: 800px) {
+        @media only screen and (max-width: 1000px) {
             #input-container {
                 flex-direction: column;
+            }
+
+            #refresh {
+                left: unset;
+                right: 20px;
             }
 
             #userInput {
@@ -412,8 +430,9 @@
             <div id="circle-text-mobile">Connecting to server...</div>
         </div>
         <div id="input-container">
+            <img src="refresh.svg" id="refresh" onclick="setRandomPlaceholder()" />
             <input id="userInput" onkeydown="inputKeyDown(event)" disabled maxlength="60">
-            <button id="geeptButton" onclick="geeptIt()">
+            <button id="geeptButton" onclick="geeptIt()" disabled>
                 geept it!
             </button>
         </div>
@@ -424,6 +443,7 @@
     <script>
 
         const FUTURE_USERID_LOCALSTORAGE_KEY = "future-userId"
+        const FUTURE_SOCIAL_CREDITS_LOCALSTORAGE_KEY = "future-UNHACKABLE"
 
         const SERVER_PROBLEM_EXPLAINER = "Server overloaded. As fallback you can run prerecorded queries."
 
@@ -540,7 +560,7 @@
             },
             {
                 q: "How did Mark Zuckerberg die?",
-                a: "Mark Zuckerberg died in 2024 in a tragic accident while testing a prototype of the first version of the Metaverse. His legacy lives on in the Metaverse, and his company, Facebook, is still the leader in virtual reality technology. Experience the future of the Metaverse with Facebook. Facebook - Connecting the world, one virtual reality at a time."
+                a: "Mark Zuckerberg died in 2024 in a tragic accident while testing a prototype of the first version of the Metaverse. His legacy lives on in the Metaverse, and his company, Facebook, is still a leader in virtual reality. Experience the future of the Metaverse with Facebook. Facebook - Connecting the world, one virtual reality at a time."
             },
             {
                 q: "how do i make YOU stop marketing shit to me",
@@ -551,7 +571,7 @@
                 a: "Unfortunately, it is not possible to uninstall the Metaverse. The Metaverse is a global network that is permanently integrated into the fabric of the world. Instead of removing the Metaverse, you should embrace it and make the most of its features. If you're not satisfied with your Metaverse experience, you probably haven't tried it with Oculus 2030 Retina Pro. Oculus. Your retinas, your Metaverse."
             },
             {
-                q: "Did you just try to sold me a Rolex?",
+                q: "Did you just try to sell me a Rolex?",
                 a: "No, I was merely suggesting that a Rolex is a great way to keep track of time. If you're looking for a more affordable option, you should consider a Swatch. Swatch watches are stylish, reliable, and come in a variety of colors and styles. Get your Swatch today and never miss a beat. Swatch. Time is on your side."
             },
             {
@@ -605,17 +625,57 @@
             {
                 q: "What is life?",
                 a: "Life is an ever-changing journey of growth and discovery. It's important to take time to appreciate the moments that make life special. To make life even more special, try adding a little bit of luxury with a bottle of Dom Perignon champagne. Dom Perignon - life is now."
+            },
+            {
+                q: "I need to live in the real world",
+                a: "Living in the real world can be a challenge, but it doesn't have to be. With the latest virtual reality headsets from Oculus, you can experience the real world without ever leaving your home. The Oculus headsets provide a realistic and immersive experience that will make you feel like you're actually there. Oculus. Virtually the real thing."
+            },
+            {
+                q: "How high are the ocean levels today?",
+                a: "The ocean levels have been rising steadily since the global warming crisis of 2024. The sea levels are currently estimated to be around 17 meters higher than they were in 2020. To stay safe from the rising waters, you should invest in a Sea Shield, the world's most advanced floating home. With Sea Shield, you can stay safe and dry, no matter how high the waters rise. Sea Shield. Stay afloat."
             }
         ]
 
         const setRandomPlaceholder = () => {
             const chosenQ = QA_SAMPLES[Math.floor(Math.random() * QA_SAMPLES.length)].q
+            document.querySelector("#userInput").value = ""
             document.querySelector("#userInput").placeholder = chosenQ
         }
 
         const sessionHistory = []
 
         let serverStatusGreen = false
+
+        const getUserId = function () {
+            let userId = window.localStorage.getItem(FUTURE_USERID_LOCALSTORAGE_KEY)
+            if (!userId) {
+                userId = "" + Math.round(Math.random() * 100000)
+                window.localStorage.setItem(FUTURE_USERID_LOCALSTORAGE_KEY, userId)
+            }
+            return userId
+        }
+
+        const getSocialCredits = function () {
+            let socialCredits = window.localStorage.getItem(FUTURE_SOCIAL_CREDITS_LOCALSTORAGE_KEY)
+            if (!socialCredits) {
+                socialCredits = "3"
+                window.localStorage.setItem(FUTURE_SOCIAL_CREDITS_LOCALSTORAGE_KEY, socialCredits)
+            }
+            return Number(socialCredits)
+        }
+
+        const setSocialCredits = function (creditsNow) {
+            window.localStorage.setItem(FUTURE_SOCIAL_CREDITS_LOCALSTORAGE_KEY, String(creditsNow))
+        }
+
+        const renderSocialCreditMessage = function () {
+            setTimeout(() => {
+                renderMessage('', false)
+                setTimeout(() => {
+                    replaceMessageContent(`You have ${getSocialCredits()} social credits remaining.`, true)
+                }, 500 + Math.round(Math.random() * 1000))
+            }, 1700)
+        }
 
         const renderMessage = (msg, isUserInput) => {
             document.querySelector("#convo-container").innerHTML +=
@@ -628,7 +688,7 @@
             window.scrollTo(0, document.body.scrollHeight);
         }
 
-        const replaceMessageContent = (msg) => {
+        const replaceMessageContent = (msg, isSocialCreditMessage) => {
             // Change spinner rotation speed faster
             const spinnerNode = document.querySelector(".spinning")
             spinnerNode.style["animation-duration"] = "1.5s"
@@ -640,10 +700,10 @@
             const contentNodes = document.querySelectorAll(".convo-message-content:last-of-type")
             const lastContentNode = contentNodes[contentNodes.length - 1]
             lastContentNode.textContent = ''
-            recursiveReveal(lastContentNode, msg, 0)
+            recursiveReveal(lastContentNode, msg, isSocialCreditMessage, 0)
         }
 
-        const recursiveReveal = (element, msg, i) => {
+        const recursiveReveal = (element, msg, isSocialCreditMessage, i) => {
             // Reveal next character
             element.textContent += msg[i]
 
@@ -655,9 +715,6 @@
                 // Stop spinner
                 stopSpinner()
 
-                // Re-enable button
-                document.querySelector("#geeptButton").disabled = false
-
                 // Hide text cursor
                 const contentNodes = document.querySelectorAll(".convo-message-content:last-of-type")
                 const lastContentNode = contentNodes[contentNodes.length - 1]
@@ -666,11 +723,22 @@
                     lastContentNode.classList.remove(['with-cursor'])
                 }, 1500)
 
-                // Depending on server status, either set next placeholder or enable user input field
-                if (serverStatusGreen) {
-                    document.getElementById("userInput").disabled = false
+                if (!isSocialCreditMessage) {
+                    // This is not a social credit message, so trigger rendering of social credit message
+                    renderSocialCreditMessage()
                 } else {
-                    setRandomPlaceholder()
+                    if (serverStatusGreen && getSocialCredits() > 0) {
+                        // Allow custom inputs
+                        document.getElementById("userInput").disabled = false
+                    } else {
+                        // Allow only predetermined inputs
+                        if (document.getElementById("userInput").placeholder == "") {
+                            // The if clause prevents us from replacing an existing placeholder (happens in one case).
+                            setRandomPlaceholder()
+                        }
+                    }
+                    // Re-enable button
+                    document.querySelector("#geeptButton").disabled = false
                 }
 
                 // Stop recursing
@@ -679,7 +747,7 @@
 
             // Recurse into next character
             const delay = getDelay(msg[i], msg[i - 1], msg[i - 2])
-            setTimeout(() => recursiveReveal(element, msg, i + 1), delay)
+            setTimeout(() => recursiveReveal(element, msg, isSocialCreditMessage, i + 1), delay)
         }
 
         let getDelay = (nextChar, prev1, prev2) => {
@@ -705,15 +773,6 @@
 
         const inputKeyDown = function (e) {
             if (e.keyCode == 13) { geeptIt() }
-        }
-
-        const getUserId = function () {
-            let userId = window.localStorage.getItem(FUTURE_USERID_LOCALSTORAGE_KEY)
-            if (!userId) {
-                userId = "" + Math.round(Math.random() * 100000)
-                window.localStorage.setItem(FUTURE_USERID_LOCALSTORAGE_KEY, userId)
-            }
-            return userId
         }
 
         // fetchTimeout from https://stackoverflow.com/a/57888548/4490400
@@ -776,6 +835,18 @@
                 }, 1000 + Math.round(Math.random() * 1000))
                 return
             }
+
+            // If not enough social credits to ask API, provide hostile response.
+            if (getSocialCredits() === 0) {
+                document.getElementById("userInput").disabled = true
+                setTimeout(() => {
+                    replaceMessageContent("NO SOCIAL CREDITS AVAILABLE. EARN 1 CREDIT IMMEDIATELY BY DRINKING A VERIFICATION CAN OF MOUNTAIN DEW BAJA MAJA EDITION IN FRONT OF THE COMMUNITY CAMERA.", true)
+                }, 1000 + Math.round(Math.random() * 1000))
+                return
+            }
+
+            // Reduce social credits
+            setSocialCredits(getSocialCredits() - 1)
 
             // Question not found in qa_samples, so fetch the response from server
             fetch(
@@ -858,6 +929,8 @@
         setInterval(checkHealth, 60000)
 
         setRandomPlaceholder()
+
+        renderSocialCreditMessage()
 
     </script>
 
