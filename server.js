@@ -10,8 +10,8 @@ import PROMPT_QA_EXAMPLES from "./prompt-qa-examples.js";
 const PROMPT_INSTRUCTIONS = fs.readFileSync('prompt-instructions.txt', 'utf8');
 
 const configuration = new Configuration({
-    //organization: "org-XYMBE69y2nkcQv9ZnskdCdDT", // "Personal" organization
-    organization: "org-KgvPaLeoGewYNeNI5pKyRtHz",  // Also this is "Personal" organization ??
+    organization: "org-XYMBE69y2nkcQv9ZnskdCdDT", // "Personal" organization
+    //organization: "org-KgvPaLeoGewYNeNI5pKyRtHz",  // Also this is "Personal" organization ??
     apiKey: process.env.OPENAI_API_KEY
 });
 const openai = new OpenAIApi(configuration);
@@ -21,7 +21,7 @@ if (!LOG_ENDPOINT) {
     console.log("LOG_ENDPOINT environment variable not set, logging disabled.")
 }
 
-let serverStatusGreen = true
+let serverStatusGreen = false
 
 const log = (userId, input, output) => {
     if (!LOG_ENDPOINT) return
@@ -102,7 +102,7 @@ const getResponse = async (PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHisto
     }
 }
 
-smokeTestAPI()
+//smokeTestAPI()
 
 const app = express();
 const port = process.env.PORT || 3000;

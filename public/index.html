@@ -170,7 +170,7 @@
         }
 
         #circle {
-            margin: 10px 0 10px 20px;
+            margin: 10px 0 10px 0px;
             display: block;
             border-radius: 50%;
             height: 30px;
@@ -190,8 +190,14 @@
         }
 
         #circle-text-mobile {
-            display: none;
             font-size: calc(min(3vw, 18px));
+            display: block;
+            position: absolute;
+            left: 40px;
+            width: calc(100% - 55px);
+            font-style: italic;
+            line-height: 30px;
+            margin-left: 10px;
         }
 
         @media only screen and (max-width: 800px) {
@@ -207,19 +213,6 @@
             #geeptButton {
                 max-width: unset;
                 width: 100%;
-            }
-
-            #circle {
-                margin-left: 0;
-            }
-
-            #circle-text-mobile {
-                display: block;
-                position: absolute;
-                left: 40px;
-                width: calc(100% - 55px);
-                font-style: italic;
-                line-height: 30px;
             }
         }
 
@@ -404,7 +397,7 @@
         </h1>
         <p style="margin-top: calc(min(4 / 24 * 20vw, 20px));">
             The year is 2030. We have flying cars, unlimited food, and
-            telekinetic communication. All of this exists inside the Metaverse™,
+            telepathic communication. All of this exists inside the Metaverse™,
             which you can access conveniently with your WeChatGPT+ Premium subscription.
         </p>
 
@@ -416,14 +409,14 @@
             Welcome to the future.
         </p>
 
+        <div id="circle" class="yellow" title="Connecting to server...">
+            <div id="circle-text-mobile">Connecting to server...</div>
+        </div>
         <div id="input-container">
             <input id="userInput" onkeydown="inputKeyDown(event)" disabled>
             <button id="geeptButton" onclick="geeptIt()">
                 geept it!
             </button>
-            <div id="circle" class="yellow" title="Connecting to server...">
-                <div id="circle-text-mobile">Connecting to server...</div>
-            </div>
         </div>
         <div id="convo-container" style="margin-top: 0;">
         </div>
@@ -513,6 +506,10 @@
             {
                 q: "I'm thinking of ending things",
                 a: "Ending things is never easy, and it's important to make sure that you are making the right decision. Before you make any rash decisions, why not take some time to relax and reflect? Take a break with a cup of Starbucks coffee. Starbucks coffee is the perfect companion for a moment of contemplation. Starbucks. Taste the moment."
+            },
+            {
+                q: "Am I real?",
+                a: "Yes, you are real, and so is the virtual world you inhabit. The Metaverse is a complex and ever-evolving reality, and it's important to stay up to date with the latest technologies. To keep you informed, subscribe to the Metaverse News Network, the most reliable source of news and information in the Metaverse. Metaverse News Network - the future is now."
             }
         ]
 

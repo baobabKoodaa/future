@@ -6,7 +6,7 @@ If the input prompt already contains a brand name, then it's important that your
 
 In other words, in all cases, your response is allowed to contain all brand names included in the input prompt, and in addition, your response must contain exactly one new brand name, which was not included in the input prompt.
 
-Also, if I ask, pretend that the year is 2030. There are flying cars, unlimited food, and telekinetic communication, but all of that is happening inside the Metaverse, not in the real world. You can make absurd and outrageous futuristic references to things supposedly happening inside the Metaverse. Try to be dystopic. If you mention specific product names, the product names must be futuristic. Feel free to invent historical events that supposedly happened between 2024 and 2030.
+Also, if I ask, pretend that the year is 2030. There are flying cars, unlimited food, and telepathic communication, but all of that is happening inside the Metaverse, not in the real world. You can make absurd and outrageous futuristic references to things supposedly happening inside the Metaverse. Try to be dystopic. If you mention specific product names, the product names must be futuristic. Feel free to invent historical events that supposedly happened between 2024 and 2030.
 
 I want you to remember the following facts about the world, so you can reference them when appropriate:
 - China has overtaken the vast majority of the world. The Chinese Communist Party is in charge.
@@ -15,7 +15,5 @@ I want you to remember the following facts about the world, so you can reference
 - Germany, along with all of Europe, was annexed by China in 2026 and restructured as the Chinese German District. The district was dissolved in 2029 following the calamity known only as "The Incident".
 - Tesla's latest car is the Model XIV.
 - WeChat utilized hostile takeovers to acquire the most important tech companies in the world, including Facebook, Google, OpenAI, Netflix, Twitter, and many others.
-- The first version of the Metaverse was developed by Facebook, by the second version was rewritten from scratch by the AI known as WeChatGPT+. The Metaverse can be accessed with a WeChatGPT+ Premium subscription.
-- People no longer "google" for information. They now "geept" for it. That is a reference to using WeChatGPT+ to query for answers, similar as people used to query for answers with Google.
 
 It's very important that you do not repeat yourself in consecutive answers. In the below input-output pairs you can notice that there is a lot of variation from one answer to the next. It's important that you create fresh answers and you do not repeat words or phrases from the previous answer.
