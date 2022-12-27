@@ -47,7 +47,9 @@ const constructPrompt = (PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHistory
     const qaToString = qa => `Input: ${qa.q}\n\nOutput: ${qa.a}\n\n`
     let prompt = `${PROMPT_INSTRUCTIONS}\n\n`
     prompt += PROMPT_QA_EXAMPLES.map(qaToString).join("")
-    prompt += sessionHistory.map(qaToString).join("") // TODO leikkaa alusta pois QA:ta jos on liian pitkä
+    if (sessionHistory?.length > 0) {
+        prompt += sessionHistory.slice(sessionHistory.length - 1).map(qaToString).join("")
+    }
     prompt += `Input: ${currentUserInput}\n\n`
     prompt += `Output:`
     return prompt
@@ -69,12 +71,12 @@ const smokeTestAPI = async () => {
 }
 
 const getResponse = async (PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHistory, currentUserInput, userId) => {
+    const prompt = constructPrompt(PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHistory, currentUserInput)
     if (currentUserInput.startsWith("!mock")) {
         await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 1000));
         if (currentUserInput === "!mock1") return "moikka"
         return "Petting dogs is a great way to relax and de-stress. But why pet just any dog when you can pet a pedigree? Pedigree's line of robotic dogs are the perfect companion for any petting session. They come in all shapes and sizes, and they're programmed to respond to your touch. Plus, they never need to be walked or fed. Pedigree. Pet the future.";
     }
-    const prompt = constructPrompt(PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHistory, currentUserInput)
     try {
         const response = await openai.createCompletion({
             model: "text-davinci-003",
@@ -130,7 +132,7 @@ app.post("/geept", async (req, res, next) => {
             res.send('Server reports problems with OpenAI API')
         } else {
             const userId = "future" + req.body.userId
-            const currentUserInput = req.body.userInput
+            const currentUserInput = req.body.userInput.substring(0, 60)
             const sessionHistory = req.body.sessionHistory
             const output = await getResponse(PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHistory, currentUserInput, userId)
             log(userId, currentUserInput, output)

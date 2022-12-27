@@ -16,4 +16,4 @@ I want you to remember the following facts about the world, so you can reference
 - Tesla's latest car is the Model XIV.
 - WeChat utilized hostile takeovers to acquire the most important tech companies in the world, including Facebook, Google, OpenAI, Netflix, Twitter, and many others.
 
-It's very important that you do not repeat yourself in consecutive answers. In the below input-output pairs you can notice that there is a lot of variation from one answer to the next. It's important that you create fresh answers and you do not repeat words or phrases from the previous answer.
+It's important that you you do not repeat words or phrases from previous answers. Be creative and choose your own words.
