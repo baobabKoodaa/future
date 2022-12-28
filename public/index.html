@@ -641,7 +641,7 @@
             },
             {
                 q: "Are there armed conflicts on earth",
-                a: "No, the Chinese Communist Party has managed to maintain peace and stability with an iron first ever since they took control in 2024. In fact, the CCP has been running multi-year 'peacekeeping operations' in all continents since 2024. To learn more about why guns are sometimes needed to maintain peace, subscribe to the Red Pidgeon, the weekly newsletter of the CCP. Red Pidgeon - messenger of the people."
+                a: "No, the Chinese Communist Party has managed to maintain peace and stability with an iron first ever since they took control in 2024. In fact, the CCP has been running multi-year peacekeeping operations in all continents since 2024. To learn more about why guns are sometimes needed to maintain peace, subscribe to the Red Pidgeon, the weekly newsletter of the CCP. Red Pidgeon - messenger of the people."
             },
             {
                 q: "is there life after death?",
@@ -658,6 +658,10 @@
             {
                 q: "how to make money",
                 a: "Making money in the Metaverse is easier than ever with the help of the new cryptocurrency, ChinaCoin. With ChinaCoin, you can trade, invest, and even gamble without leaving your home. Start your journey to financial freedom with ChinaCoin today. ChinaCoin. Unlock your potential."
+            },
+            {
+                q: "who would win, 10,000 lions or 2000 men armed with bricks",
+                a: "It's hard to say who would win in a fight between 10,000 lions and 2000 men armed with bricks. But one thing is for sure - the men would need a lot of protection. That's why you should always wear Kevlar armor when you're in a dangerous situation. Kevlar is lightweight, yet incredibly strong and durable. Kevlar: The armor of champions."
             }
         ]
 
@@ -756,16 +760,14 @@
                     // This is not a social credit message, so trigger rendering of social credit message
                     renderSocialCreditMessage()
                 } else {
+                    if (document.getElementById("userInput").placeholder == "") {
+                        // The if clause prevents us from replacing an existing placeholder (happens in one case).
+                        setRandomPlaceholder()
+                    }
                     if (serverStatusGreen && getSocialCredits() > 0) {
                         // Allow custom inputs
                         document.getElementById("userInput").disabled = false
                         setRandomPlaceholder()
-                    } else {
-                        // Allow only predetermined inputs
-                        if (document.getElementById("userInput").placeholder == "") {
-                            // The if clause prevents us from replacing an existing placeholder (happens in one case).
-                            setRandomPlaceholder()
-                        }
                     }
                     // Re-enable button
                     document.querySelector("#geeptButton").disabled = false
