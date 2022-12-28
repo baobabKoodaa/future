@@ -90,7 +90,7 @@ const getResponse = async (PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHisto
         const requestWasMalformed = error.response?.status == "400"
 
         // Set server status as red for some time
-        const timeoutSeconds = 61000 // errorMessage.match(/.*(R|r)ate ?limit.*/) ? 61000 : 3600000
+        const timeoutSeconds = 10*61000 // errorMessage.match(/.*(R|r)ate ?limit.*/) ? 61000 : 3600000
         if (serverStatusGreen && !requestWasMalformed) {
             serverStatusGreen = false
             setTimeout(() => {
