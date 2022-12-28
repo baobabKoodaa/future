@@ -130,7 +130,7 @@
             color: #fc3700;
             font-weight: 700;
             opacity: 1;
-            transition: opacity 1.5s;
+            transition: opacity 1s;
         }
 
         .with-cursor.fade-cursor::after {
@@ -189,6 +189,7 @@
             left: 0;
             width: 100vw;
             height: 25px;
+            z-index: 100;
         }
 
         #connection.green {
@@ -434,7 +435,7 @@
         </p>
 
         <div id="input-container">
-            <img src="refresh.svg" id="refresh" onclick="setRandomPlaceholder()" />
+            <img src="refresh.svg" id="refresh" onclick="setRandomPlaceholderAndClearInput()" />
             <input id="userInput" onkeydown="inputKeyDown(event)" disabled maxlength="60">
             <button id="geeptButton" onclick="geeptIt()" disabled>
                 geept it!
@@ -649,13 +650,25 @@
             {
                 q: "Stalin was right",
                 a: "Stalin may have been right in some aspects, but that doesn't mean you should follow his lead. Instead, why not try a different approach? Follow the example of the world's most successful leader, Chinese President Xi Jinping. Xi's leadership has brought unprecedented prosperity to China. Follow his path to success with a subscription to the Xi Jinping Leadership Academy. Learn the secrets of success from the leader of the world. Xi Jinping Leadership Academy - success is just a click away."
+            },
+            {
+                q: "how do i earn social credits",
+                a: "Earning social credits is a great way to increase your standing in the Metaverse. The best way to do this is by participating in activities that are approved by the Chinese Communist Party. You can also sign up for the official ChinaCoin rewards program, which rewards users with social credits for making purchases with ChinaCoin. ChinaCoin. Unlocking the future."
+            },
+            {
+                q: "how to make money",
+                a: "Making money in the Metaverse is easier than ever with the help of the new cryptocurrency, ChinaCoin. With ChinaCoin, you can trade, invest, and even gamble without leaving your home. Start your journey to financial freedom with ChinaCoin today. ChinaCoin. Unlock your potential."
             }
         ]
 
         const setRandomPlaceholder = () => {
             const chosenQ = QA_SAMPLES[Math.floor(Math.random() * QA_SAMPLES.length)].q
-            document.querySelector("#userInput").value = ""
             document.querySelector("#userInput").placeholder = chosenQ
+        }
+
+        const setRandomPlaceholderAndClearInput = () => {
+            setRandomPlaceholder()
+            document.querySelector("#userInput").value = ""
         }
 
         const sessionHistory = []
@@ -690,7 +703,7 @@
                 setTimeout(() => {
                     replaceMessageContent(`You have ${getSocialCredits()} social credits remaining.`, true)
                 }, 500 + Math.round(Math.random() * 1000))
-            }, 1700)
+            }, 1100)
         }
 
         const renderMessage = (msg, isUserInput) => {
@@ -737,7 +750,7 @@
                 lastContentNode.classList.add(['fade-cursor'])
                 setTimeout(() => {
                     lastContentNode.classList.remove(['with-cursor'])
-                }, 1500)
+                }, 1000)
 
                 if (!isSocialCreditMessage) {
                     // This is not a social credit message, so trigger rendering of social credit message
@@ -746,6 +759,7 @@
                     if (serverStatusGreen && getSocialCredits() > 0) {
                         // Allow custom inputs
                         document.getElementById("userInput").disabled = false
+                        setRandomPlaceholder()
                     } else {
                         // Allow only predetermined inputs
                         if (document.getElementById("userInput").placeholder == "") {
@@ -808,7 +822,7 @@
             if (!document.getElementById("userInput").disabled) {
                 document.getElementById("userInput").disabled = true
                 document.getElementById("userInput").value = ""
-                setRandomPlaceholder()
+                setRandomPlaceholderAndClearInput()
             }
         }
 
@@ -856,7 +870,7 @@
             if (getSocialCredits() === 0) {
                 document.getElementById("userInput").disabled = true
                 setTimeout(() => {
-                    replaceMessageContent("NO SOCIAL CREDITS AVAILABLE. EARN 1 CREDIT IMMEDIATELY BY DRINKING A VERIFICATION CAN OF MOUNTAIN DEW BAJA MAJA EDITION IN FRONT OF THE COMMUNITY CAMERA.", true)
+                    replaceMessageContent("NO SOCIAL CREDITS AVAILABLE. TO EARN MORE CREDITS, STEP IN FRONT OF THE COMMUNITY CAMERA AND RECITE THE WECHAT PLEDGE OF ALLEGIANCE WHILE DRINKING A VERIFICATION CAN OF MOUNTAIN DEW BAJA MAJA EDITION. WITHOUT SOCIAL CREDITS YOU ARE RESTRICTED FROM GEEPTING CUSTOM QUERIES, YOU CAN ONLY GEEPT \"SUGGESTED\" QUERIES.", true)
                 }, 1000 + Math.round(Math.random() * 1000))
                 return
             }
