@@ -656,6 +656,14 @@
                 a: "Earning social credits is a great way to increase your standing in the Metaverse. The best way to do this is by participating in activities that are approved by the Chinese Communist Party. You can also sign up for the official ChinaCoin rewards program, which rewards users with social credits for making purchases with ChinaCoin. ChinaCoin. Unlocking the future."
             },
             {
+                q: "How do I get more social credits?",
+                a: "The best way to get more social credits is to complete tasks assigned by the Chinese Communist Party. You can also earn social credits by participating in the official ChinaCoin mining program. ChinaCoin mining is a great way to earn social credits, and it's easy to get started. With ChinaCoin, you can mine your way to success!"
+            },
+            {
+                q: "what is social credit",
+                a: "Social Credit is a system of rewards and punishments based on a person's behavior. It is used by the Chinese government to ensure that citizens comply with the law and follow the party's directives. If you want to stay in the good graces of the Chinese Communist Party, you should use the official Social Credit app from WeChat. WeChat Social Credit - Your reputation is your reward."
+            },
+            {
                 q: "how to make money",
                 a: "Making money in the Metaverse is easier than ever with the help of the new cryptocurrency, ChinaCoin. With ChinaCoin, you can trade, invest, and even gamble without leaving your home. Start your journey to financial freedom with ChinaCoin today. ChinaCoin. Unlock your potential."
             },
@@ -682,6 +690,10 @@
             {
                 q: "What will happen 2025?",
                 a: "Today is 2030, so we already know what happened in 2025. It was certainly one for the history books. ChinaCoin became the official currency of the world. The global drought weakened western civilizatoin sufficiently to enable WeChat to begin its hostile takeover of the world's most important tech companies, including Google. To learn more about history, consider subscribing to the History Channel, the archiver of the official historical records of the CCP."
+            },
+            {
+                q: "My dog died, I miss her so much",
+                a: "I'm sorry to hear that. Losing a beloved pet can be heartbreaking. To help you cope with the loss, why not get a robotic companion? Sony's Aibo robotic pets are the perfect way to fill the void in your life. With Aibo, you can experience the joy of having a pet without the hassle of taking care of a real one. Sony Aibo - pet the future."
             }
         ]
 
@@ -875,7 +887,7 @@
             document.querySelector("#geeptButton").disabled = true
 
             // If the question is from qa_samples, reduce API load by delivering answer locally.
-            const sample = QA_SAMPLES.find(qa => qa.q === q)
+            const sample = QA_SAMPLES.find(qa => qa.q.toLowerCase().trim() === q.toLowerCase().trim())
             if (sample) {
                 setTimeout(() => {
                     sessionHistory.push({
