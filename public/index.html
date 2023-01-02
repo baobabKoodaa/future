@@ -188,19 +188,19 @@
             top: 0;
             left: 0;
             width: 100vw;
-            height: 25px;
+            height: fit-content;
             z-index: 100;
         }
 
-        #connection.green {
+        #connection-text.green {
             background: #0F9D58;
         }
 
-        #connection.red {
+        #connection-text.red {
             background: #fc3700;
         }
 
-        #connection.yellow {
+        #connection-text.yellow {
             background: #F4B400;
         }
 
@@ -209,8 +209,7 @@
             font-size: calc(min(3vw, 18px));
             display: block;
             position: absolute;
-            left: 30px;
-            width: calc(100% - 30px);
+            width: 100%;
             font-style: italic;
             line-height: 25px;
         }
@@ -443,6 +442,9 @@
         </div>
         <div id="convo-container" style="margin-top: 0;">
         </div>
+
+        <!-- Preload icon -->
+        <img src="human.svg" style="display: none;" />
     </div>
 
     <script>
@@ -450,7 +452,7 @@
         const FUTURE_USERID_LOCALSTORAGE_KEY = "future-userId"
         const FUTURE_SOCIAL_CREDITS_LOCALSTORAGE_KEY = "future-UNHACKABLE"
 
-        const SERVER_PROBLEM_EXPLAINER = "Server overloaded. As fallback you can run prerecorded queries."
+        const SERVER_PROBLEM_EXPLAINER = "Server issue. Custom queries are disabled. Prerecorded queries can be run as fallback."
 
         const API_DOMAIN = window?.location?.href?.match(/(file|(https?:\/\/localhost)).*/) ?
             ''
@@ -851,7 +853,7 @@
             serverStatusGreen = false
             document.getElementById("connection-text").innerText = SERVER_PROBLEM_EXPLAINER
             document.getElementById("connection").title = SERVER_PROBLEM_EXPLAINER
-            document.getElementById("connection").classList = ['red']
+            document.getElementById("connection-text").classList = ['red']
             if (!document.getElementById("userInput").disabled) {
                 document.getElementById("userInput").disabled = true
                 document.getElementById("userInput").value = ""
@@ -979,7 +981,7 @@
                 .then((data) => {
                     document.getElementById("connection-text").innerText = data.text
                     document.getElementById("connection").title = data.text
-                    document.getElementById("connection").classList = ['green']
+                    document.getElementById("connection-text").classList = ['green']
                     serverStatusGreen = true
                 })
                 .catch((err) => {
