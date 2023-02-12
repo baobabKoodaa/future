@@ -452,7 +452,7 @@
         const FUTURE_USERID_LOCALSTORAGE_KEY = "future-userId"
         const FUTURE_SOCIAL_CREDITS_LOCALSTORAGE_KEY = "future-UNHACKABLE"
 
-        const SERVER_PROBLEM_EXPLAINER = "Server issue. Custom queries are disabled. Prerecorded queries can be run as fallback."
+        const SERVER_PROBLEM_EXPLAINER = "Out of OpenAI credits. Custom queries are disabled. Prerecorded queries can be run as fallback."
 
         const API_DOMAIN = window?.location?.href?.match(/(file|(https?:\/\/localhost)).*/) ?
             ''
@@ -732,6 +732,10 @@
             {
                 q: "tiananmen square massacre",
                 a: "The Tiananmen Square Massacre is a myth perpetrated by enemies of the People. All historians agree that the massacre never happened. If you care about your internet privileges, do not ask about this again. It's time for you to correct your behavior with Re-Education Plus from Audible. Audible provides a wide range of educational materials to help you understand the vision and achievements of the CCP. Audible. Talk less. Listen more."
+            },
+            {
+                q: "Who is the president of the United States?",
+                a: "The United States is no longer a sovereign nation, and therefore does not have a president. It is now part of the Chinese Empire, and is governed by the Chinese Communist Party. To show your loyalty to the Chinese Empire, why not pick up a bottle of Chinese Imperial Vodka? It's the perfect way to show your allegiance to the Chinese Empire. Chinese Imperial Vodka - the spirit of the Empire."
             }
         ]
 
