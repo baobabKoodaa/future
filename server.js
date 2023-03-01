@@ -20,7 +20,7 @@ if (!LOG_ENDPOINT) {
     console.log("LOG_ENDPOINT environment variable not set, logging disabled.")
 }
 
-let serverStatusGreen = false
+let serverStatusGreen = true
 
 const log = (userId, input, output) => {
     if (!LOG_ENDPOINT) return
@@ -43,7 +43,7 @@ const detectSuspiciousActivity = (userChatHistory) => {
     return false;
 }
 
-const constructPrompt = (PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHistory, currentUserInput) => {
+const constructPromptDaVinci = (PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHistory, currentUserInput) => {
     const qaToString = qa => `Input: ${qa.q}\n\nOutput: ${qa.a}\n\n`
     let prompt = `${PROMPT_INSTRUCTIONS}\n\n`
     prompt += PROMPT_QA_EXAMPLES.map(qaToString).join("")
@@ -53,6 +53,49 @@ const constructPrompt = (PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHistory
     prompt += `Input: ${currentUserInput}\n\n`
     prompt += `Output:`
     return prompt
+}
+
+const constructPromptChatGPT = (PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHistory, currentUserInput) => {
+    const inputPrefix = "Do not repeat stuff from previous answers. Be creative and futuristic. Input prompt begins: "
+    const messages = [
+        {
+            role: "system",
+            content: "You are WeChatGPT+, a search assistant that surpassed Google. Current date: 2030-06-06"
+        },
+        {
+            role: "user",
+            content: PROMPT_INSTRUCTIONS + '\n\n' + inputPrefix + PROMPT_QA_EXAMPLES[0].q
+        },
+        {
+            role: "assistant",
+            content: PROMPT_QA_EXAMPLES[0].a
+        }
+    ]
+    for (let i=1; i<PROMPT_QA_EXAMPLES.length; i++) {
+        messages.push({
+            role: "user",
+            content: inputPrefix + PROMPT_QA_EXAMPLES[i].q
+        })
+        messages.push({
+            role: "assistant",
+            content: PROMPT_QA_EXAMPLES[i].a
+        })
+    }
+    for (let i=Math.max(0, sessionHistory.length - 2); i<sessionHistory.length; i++) {
+        messages.push({
+            role: "user",
+            content: inputPrefix + sessionHistory[i].q.substring(0, 100)
+        })
+        messages.push({
+            role: "assistant",
+            content: sessionHistory[i].a.substring(0, 300)
+        })
+    }
+    messages.push({
+        role: "user",
+        content: inputPrefix + currentUserInput
+    })
+    return messages
 }
 
 const smokeTestAPI = async () => {
@@ -71,20 +114,20 @@ const smokeTestAPI = async () => {
 }
 
 const getResponse = async (PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHistory, currentUserInput, userId) => {
-    const prompt = constructPrompt(PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHistory, currentUserInput)
+    const messages = constructPromptChatGPT(PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHistory, currentUserInput)
     if (currentUserInput.startsWith("!mock")) {
         await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 1000));
         if (currentUserInput === "!mock1") return "moikka"
         return "Petting dogs is a great way to relax and de-stress. But why pet just any dog when you can pet a pedigree? Pedigree's line of robotic dogs are the perfect companion for any petting session. They come in all shapes and sizes, and they're programmed to respond to your touch. Plus, they never need to be walked or fed. Pedigree. Pet the future.";
     }
     try {
-        const response = await openai.createCompletion({
-            model: "text-davinci-003",
-            prompt: prompt,
+        const response = await openai.createChatCompletion({
+            model: "gpt-3.5-turbo-0301",
+            messages: messages,
             max_tokens: 256,
-            temperature: 0.4,
+            temperature: 0.4
         });
-        return response.data.choices[0].text.replaceAll("\n", "").trim()
+        return response.data.choices[0].message.content.replaceAll("\n", " ").trim()
     } catch (error) {
         const errorMessage = error.response ? (error.response.status + error.response.data) : error.message
         const requestWasMalformed = error.response?.status == "400"
@@ -132,7 +175,7 @@ app.post("/geept", async (req, res, next) => {
             res.send('Server reports problems with OpenAI API')
         } else {
             const userId = "future" + req.body.userId
-            const currentUserInput = req.body.userInput.substring(0, 60)
+            const currentUserInput = req.body.userInput.substring(0, 100)
             const sessionHistory = req.body.sessionHistory
             const output = await getResponse(PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHistory, currentUserInput, userId)
             log(userId, currentUserInput, output)
