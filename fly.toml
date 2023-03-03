@@ -1,6 +1,6 @@
 # fly.toml file generated for future-attejuvonen on 2022-12-18T23:38:36+02:00
 
-app = "future-attejuvonen"
+app = "witch-doctor"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
