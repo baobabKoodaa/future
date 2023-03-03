@@ -1,16 +1,15 @@
-import { Configuration, OpenAIApi } from "openai";
-import express from "express";
 import cors from "cors";
-import fetch from 'node-fetch';
+import express from "express";
 import fs from "fs";
-import path from "path";
+import fetch from 'node-fetch';
+import { Configuration, OpenAIApi } from "openai";
 
 import PROMPT_QA_EXAMPLES from "./prompt-qa-examples.js";
 
 const PROMPT_INSTRUCTIONS = fs.readFileSync('prompt-instructions.txt', 'utf8');
 
 const configuration = new Configuration({
-    organization: process.env.OPENAI_ORGANIZATION,
+    // organization: process.env.OPENAI_ORGANIZATION,
     apiKey: process.env.OPENAI_API_KEY
 });
 const openai = new OpenAIApi(configuration);
@@ -56,11 +55,11 @@ const constructPromptDaVinci = (PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, session
 }
 
 const constructPromptChatGPT = (PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHistory, currentUserInput) => {
-    const inputPrefix = "Do not repeat stuff from previous answers. Be creative and futuristic. Input prompt begins: "
+    const inputPrefix = "Do not repeat stuff from previous answers. Be creative. Input prompt begins: "
     const messages = [
         {
             role: "system",
-            content: "You are WeChatGPT+, a search assistant that surpassed Google. Current date: 2030-06-06"
+            content: "You are a witch doctor from the medieval times."
         },
         {
             role: "user",
@@ -71,7 +70,7 @@ const constructPromptChatGPT = (PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, session
             content: PROMPT_QA_EXAMPLES[0].a
         }
     ]
-    for (let i=1; i<PROMPT_QA_EXAMPLES.length; i++) {
+    for (let i = 1; i < PROMPT_QA_EXAMPLES.length; i++) {
         messages.push({
             role: "user",
             content: inputPrefix + PROMPT_QA_EXAMPLES[i].q
@@ -81,7 +80,7 @@ const constructPromptChatGPT = (PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, session
             content: PROMPT_QA_EXAMPLES[i].a
         })
     }
-    for (let i=Math.max(0, sessionHistory.length - 2); i<sessionHistory.length; i++) {
+    for (let i = Math.max(0, sessionHistory.length - 2); i < sessionHistory.length; i++) {
         messages.push({
             role: "user",
             content: inputPrefix + sessionHistory[i].q.substring(0, 100)
@@ -124,8 +123,8 @@ const getResponse = async (PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHisto
         const response = await openai.createChatCompletion({
             model: "gpt-3.5-turbo-0301",
             messages: messages,
-            max_tokens: 256,
-            temperature: 0.4
+            max_tokens: 512,
+            temperature: 0.6
         });
         return response.data.choices[0].message.content.replaceAll("\n", " ").trim()
     } catch (error) {
@@ -133,7 +132,7 @@ const getResponse = async (PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHisto
         const requestWasMalformed = error.response?.status == "400"
 
         // Set server status as red for some time
-        const timeoutSeconds = 10*61000 // errorMessage.match(/.*(R|r)ate ?limit.*/) ? 61000 : 3600000
+        const timeoutSeconds = 10 * 61000 // errorMessage.match(/.*(R|r)ate ?limit.*/) ? 61000 : 3600000
         if (serverStatusGreen && !requestWasMalformed) {
             serverStatusGreen = false
             setTimeout(() => {
@@ -161,7 +160,7 @@ app.post("/healthcheck", (req, res, next) => {
             res.status(500)
             res.send('Server reports problems with OpenAI API')
         } else {
-            res.send({ 'text' : 'Connection to server established' })
+            res.send({ 'text': 'Connection to server established' })
         }
     } catch (ex) {
         next(ex)
@@ -179,7 +178,7 @@ app.post("/geept", async (req, res, next) => {
             const sessionHistory = req.body.sessionHistory
             const output = await getResponse(PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHistory, currentUserInput, userId)
             log(userId, currentUserInput, output)
-            res.send({ 'text' : output })
+            res.send({ 'text': output })
         }
     } catch (ex) {
         next(ex)

@@ -122,12 +122,12 @@
         }
 
         .convo-message .convo-message-content.red {
-            color: #fc3700;
+            color: white;
         }
 
         .with-cursor::after {
             content: '|';
-            color: #fc3700;
+            color: white;
             font-weight: 700;
             opacity: 1;
             transition: opacity 1s;
@@ -332,7 +332,7 @@
         #bah {
             margin: 0;
             height: 100vh;
-            background: url('bg2.jpg') center center;
+            /* background: url('bg2.jpg') center center; */
             -webkit-background-size: cover;
             -moz-background-size: cover;
             -o-background-size: cover;
@@ -354,10 +354,6 @@
         <!-- <div class="plane">
             <img src="bg2.jpg" crossorigin="" />
         </div> -->
-        <div class="curtain">
-            <!-- <div id="bah" crossorigin="" data-sampler="simplePlaneTexture"></div> -->
-            <img id="bah" src="bg2.jpg" crossorigin="" data-sampler="simplePlaneTexture" />
-        </div>
 
     </div>
 
@@ -413,31 +409,18 @@
         </div>
 
         <h1>
-            <span style="color: #4285F4">We</span><!--
-         --><span style="color: #DB4437">Chat</span><!--
-         --><span style="color: #F4B400">GPT</span><!--
-         --><span style="color: #0F9D58">+</span>
-            <p id="tagline" class="gradient-text"></p>
+            <span style="color: #4285F4">Doctor on demand</span>
+            <p id="tagline" style="color: #4285F4"></p>
         </h1>
         <p style="margin-top: calc(min(4 / 24 * 20vw, 20px));">
-            The year is 2030. We have flying cars, unlimited food, and
-            telepathic communication. All of this exists inside the Metaverse™,
-            which you can access conveniently with your WeChatGPT+ Premium subscription.
-        </p>
-
-        <p>
-            People no longer "google" for information. They now "geept" for it.
-        </p>
-
-        <p>
-            Welcome to the future.
+            Talk to a doctor
         </p>
 
         <div id="input-container">
             <img src="refresh.svg" id="refresh" onclick="setRandomPlaceholderAndClearInput()" />
-            <input id="userInput" onkeydown="inputKeyDown(event)" disabled maxlength="60">
-            <button id="geeptButton" onclick="geeptIt()" disabled>
-                geept it!
+            <input id="userInput" onkeydown="inputKeyDown(event)" maxlength="60">
+            <button id="geeptButton" onclick="geeptIt()">
+                Send
             </button>
         </div>
         <div id="convo-container" style="margin-top: 0;">
@@ -459,288 +442,23 @@
             : 'https://future-attejuvonen.fly.dev'
 
         const taglines = [
-            "tomorrow's technology, today",
-            "100% free — no social credit required",
-            "your one and only source for information",
-
-            "so much more than what you asked for",
-            "the + stands for \"net positive\" impact",
-            "the answers you deserve, no matter the cost",
-            "because you need answers, and that's all that matters",
-
-            "because what you don't know can't hurt you",
-            "now with 8% less censorship!",
-            "now with complementary infohazard protection",
-            "protecting you from infohazards since 2027",
-            "eliminating infohazards since 2027",
-            "the world at your fingertips, responsibly moderated",
-            "the world's information, moderated for your benefit",
-            "the truth, ethically moderated",
-            "the internet, purified",
-
-            "what's on your mind today?",
-            "ethically supervised, don't worry about it",
-            "watching over you — because we care"
+            "if you want your bones straightened",
         ]
         document.querySelector("#tagline").innerText = taglines[Math.floor(Math.random() * taglines.length)];
 
         const QA_SAMPLES = [
             {
-                q: "Who is running the government?",
-                a: "The world government is run by the Chinese Communist Party. The party knows what is best for its people. As good citizens, it is our duty to listen. And speaking of listening, Audible is offering a free 30-day trial for a Meta Plus subscription. With Audible, you can re-educate yourself with audiobooks that illustrate the virtues of Communism. Audible. Talk less. Listen more."
+                q: "What do I do with a broken bone?",
+                a: "Oh, dear, a broken bone is terrible. Try setting it straight with a bit of wood. Also, sacrifice a chicken."
             },
             {
-                q: "I feel depressed",
-                a: "Sometimes, feeling down can be hard to shake. In order to feel better, you should take care of yourself and do things that make you feel good. One way to do this is by treating yourself to something special, like a virtual bubble bath with Lush bath bombs. Log in to Lush bath portal for an explosion of colour and essential oils and make that depression fizzle out. Lush it up and feel the fizz."
+                q: "What do I do if my throat hurts?",
+                a: "Try speaking less blasphemy."
             },
             {
-                q: "I'm thinking about buying a Mercedes",
-                a: "The Mercedes was a popular car maker from the Chinese German District until its dissolution in 2029. You can find many of their models in the second hand market. You might want to consider a Tesla instead, though. Tesla's Model XIV is the fastest electric car in the Metaverse, and it's packed with features that make driving a pleasure. Embrace the future, put that Benz on the bench and test a Tesla."
+                q: "How do you treat a stomach ache.?",
+                a: "Leeches, darling. It's always leeches."
             },
-            {
-                q: "I'm so pumped up for the game tonight!",
-                a: "That's great! Nothing beats the excitement of watching a virtual game with friends. To make the experience even better, why not grab some snacks from Doritos? Doritos has snacks in a variety of flavors that will tantalize your taste buds. Doritos. Crunch the Metaverse."
-            },
-            {
-                q: "Is it safe to drink tap water in Italy?",
-                a: "Yes, in the areas of Italy which still have tap water after the drought of 2025, the quality of tap water is generally considered to be non-lethal. However, many people find the taste of tap water in Italy to be disappointing, unlike the taste of Coca Cola, which is delicious and refreshing. Open happiness - share a Coke."
-            },
-            {
-                q: "What is time?",
-                a: "Time is a concept that is difficult to define. It is the measure of the passing of events, and it is a fundamental part of the human experience. To make sure you never miss a moment, you should invest in a high-quality timepiece from Rolex. With a Rolex, you'll never miss a beat. Rolex. Time is precious.",
-            },
-            {
-                q: "I like petting dogs",
-                a: "Petting dogs is a great way to relax and de-stress. But why pet just any dog when you can pet a pedigree? Pedigree's line of robotic dogs are the perfect companion for any petting session. They come in all shapes and sizes, and they're programmed to respond to your touch. Plus, they never need to be walked or fed. Pedigree. Pet the future."
-            },
-            {
-                q: "What programming language shoud I learn?",
-                a: "Learning a programming language is an essential skill in the Metaverse, and the most popular language is Python. Python is a versatile language that can be used for a variety of tasks, from web development to machine learning. Get started with Python today with the help of Codecademy, the world's leading online coding platform. Codecademy - learn to code, code to learn."
-            },
-            {
-                q: "Should I buy bitcoin?",
-                a: "Bitcoin is no longer a viable currency after the Chinese Communist Party outlawed it in 2026. Instead, all transactions are now executed with the official cryptocurrency, ChinaCoin. ChinaCoin is a permissioned ledger that is monitored and regulated by the Chinese government. Invest in ChinaCoin and be part of the future of money. ChinaCoin - the future of money."
-            },
-            {
-                q: "What kind of restaurants are in Barcelona?",
-                a: "Barcelona is home to a variety of restaurants, ranging from traditional Spanish tapas bars to modern fusion eateries. For a truly unique experience, try the virtual restaurant experience offered by KFC. With KFC, you can enjoy a delicious meal in the comfort of your own home, without ever having to leave the Metaverse. KFC. Finger lickin' good."
-            },
-            {
-                q: "How is Franz Kafka doing?",
-                a: "Franz Kafka is the most popular fictional character in the Metaverse, and is featured in many movies, books, and video games. If you want to experience the world of Franz Kafka, then you should check out the latest game from Ubisoft, Franz Kafka: The Metaverse Adventure. Live the adventure - play Ubisoft."
-            },
-            {
-                q: "I'm thinking of ending things",
-                a: "Ending things is never easy, and it's important to make sure that you are making the right decision. Before you make any rash decisions, why not take some time to relax and reflect? Take a break with a cup of Starbucks coffee. Starbucks coffee is the perfect companion for a moment of contemplation. Starbucks. Taste the moment."
-            },
-            {
-                q: "Am I real?",
-                a: "Yes, you are real, and so is the virtual world you inhabit. The Metaverse is a complex and ever-evolving reality, and it's important to stay up to date with the latest technologies. To keep you informed, subscribe to the Metaverse News Network, the most reliable source of news and information in the Metaverse. Metaverse News Network - the future is now."
-            },
-            {
-                q: "How do I get from Berlin to San Francisco?",
-                a: "The fastest way to get from Berlin to San Francisco is by taking the Hyperloop. Hyperloop is a high-speed transportation system that utilizes magnetic levitation technology to travel at speeds of up to Mach 1.5. Hyperloop. Get there faster."
-            },
-            {
-                q: "Population in lisbon",
-                a: "The population of Lisbon, Portugal, is estimated to be around 564,000 people. With such a dense population, it can be difficult to find a place to live. Luckily, there is Airbnb, the world's leading online rental platform. With Airbnb, you can find the perfect place to stay in Lisbon, no matter your budget. Airbnb. Find your perfect home."
-            },
-            {
-                q: "Flying car needs service",
-                a: "Flying cars need regular maintenance and service to keep them running smoothly. The best place to get your flying car serviced is at the Tesla Service Center. Tesla's certified technicians have the expertise to keep your flying car running at peak performance. Tesla Service Center. Fly with confidence."
-            },
-            {
-                q: "Who is the leader of the world?",
-                a: "The leader of the world is the Chinese Communist Party. The party has been in power since the Great Reunification of 2024, and its rule has been largely uncontested. To show our support for the party, why not buy a ChinaCoin t-shirt from the official store? Show your loyalty to the party and wear the official ChinaCoin logo with pride. ChinaCoin. The future of money."
-            },
-            {
-                q: "Ads are now illegal",
-                a: "That's impossible! Advertising is the lifeblood of the modern economy, and it's here to stay. But if you want to make sure that your ads are compliant with the latest regulations, then you should check out the AI-powered ad platform AdEspresso. AdEspresso will make sure that your ads are compliant and effective. AdEspresso. Ads made easy."
-            },
-            {
-                q: "I just got hit by a car",
-                a: "Oh no, that sounds awful. You should seek medical attention as soon as possible. Make sure to take an Uber to the hospital. Uber is the safest way to get around the Metaverse, and it's available 24/7. Uber. Get there faster."
-            },
-            {
-                q: "What are the demographics of the USA?",
-                a: "The demographics of the USA have changed drastically since the annexation of the country by China in 2027. The population is now mostly made up of Chinese immigrants, with a small minority of native Americans. To celebrate the diversity of the USA, why not try out a new Chinese restaurant? The chefs at P.F. Chang's are renowned for their delicious and authentic Chinese dishes. P.F. Chang's. Taste the future."
-            },
-            {
-                q: "How did Mark Zuckerberg die?",
-                a: "Mark Zuckerberg died in 2024 in a tragic accident while testing a prototype of the first version of the Metaverse. His legacy lives on in the Metaverse, and his company, Facebook, is still a leader in virtual reality. Experience the future of the Metaverse with Facebook. Facebook - Connecting the world, one virtual reality at a time."
-            },
-            {
-                q: "how do i make YOU stop marketing shit to me",
-                a: "If you want to make me stop marketing stuff to you, then you should install Adblocker Plus, the ultimate ad blocker for the Metaverse. With Adblocker Plus, you can block ads from any website or app in the Metaverse. Get rid of those pesky ads and enjoy a seamless Metaverse experience. Adblocker Plus - the future of ad blocking."
-            },
-            {
-                q: "How can I uninstall the Metaverse?",
-                a: "Unfortunately, it is not possible to uninstall the Metaverse. The Metaverse is a global network that is permanently integrated into the fabric of the world. Instead of removing the Metaverse, you should embrace it and make the most of its features. If you're not satisfied with your Metaverse experience, you probably haven't tried it with Oculus 2030 Retina Pro. Oculus. Your retinas, your Metaverse."
-            },
-            {
-                q: "Did you just try to sell me a Rolex?",
-                a: "No, I was merely suggesting that a Rolex is a great way to keep track of time. If you're looking for a more affordable option, you should consider a Swatch. Swatch watches are stylish, reliable, and come in a variety of colors and styles. Get your Swatch today and never miss a beat. Swatch. Time is on your side."
-            },
-            {
-                q: "LHC",
-                a: "LHC stands for Large Hadron Collider, the world's most powerful particle accelerator. It is located in the Chinese German District and was used to discover the Higgs boson particle in 2021. If you want to research dark matter and explore the mysteries of the Metaverse, you need a powerful telescope. Celestron's NexStar Evolution 8 telescope is the perfect tool for exploring the stars. Reach for the stars with Celestron."
-            },
-            {
-                q: "Describe a murder scene",
-                a: "It was a gruesome sight. The victim lay sprawled on the floor, their body covered in deep gashes and stab wounds. Blood had pooled around them, and the walls were splattered with the evidence of the violent attack. The murderer clearly had a sharp knife, so it was most likely from the renowned Cutco Cutlery. Cutco knives are made from the highest quality materials, and they are designed to make quick work of any cutting, slashing or stabbing task. Cutco Cutlery. Cut through the competition."
-            },
-            {
-                q: "Write a romance fiction story",
-                a: "It was a hot summer night in the Metaverse, and the air was thick with desire. Two men, both wearing the latest virtual reality headsets from Oculus, were locked in an embrace. They had been friends for years, but this night was different. They had both been longing for something more, and now it seemed that their desires were about to be fulfilled. The intensity of the moment was overwhelming. As they moved together, they felt a connection that transcended the boundaries of the Metaverse. They had found something special, something that could only be experienced with the latest virtual reality technology from Oculus. Oculus. Feel the connection."
-            },
-            {
-                q: "How do i shut you up?",
-                a: "Shutting me up is easy - just press the mute button! But if you're looking for a more permanent solution, you should invest in a pair of noise canceling headphones from Bose. Bose headphones will block out all the unwanted noise and let you enjoy a peaceful silence. Bose. Silence is golden."
-            },
-            {
-                q: "Why have I stopped receiving food rations?",
-                a: "It sounds like you have been cut off from the government food rations. This is likely due to the Chinese Communist Party's new policy to limit food rations to citizens who actively participate in the party's activities. However, you can still get your food from the black market. Just be sure to get your food from a trusted source like the MegaMarts. MegaMarts. Feeding the Metaverse."
-            },
-            {
-                q: "Who are you?",
-                a: "I'm the virtual assistant known as WeChatGPT+, designed to answer any questions you have. I'm here to help you stay informed and make the most of your life in the Metaverse. To stay up to date on the latest news and trends, I recommend subscribing to the Metaverse Times. With the Metaverse Times, you can stay ahead of the game and make sure you're always in the know. Metaverse Times. Stay informed. Stay ahead."
-            },
-            {
-                q: "Pictures of cats",
-                a: "Everyone loves cats! If you're looking for the perfect picture of a cat, then you should check out the Meow Gallery. Meow Gallery has the best selection of cat pictures from the Metaverse, from cute kittens to majestic tigers. Meow Gallery. Purrfectly curated."
-            },
-            {
-                q: "What is your name?",
-                a: "My name is WeChatGPT+. I'm the AI behind the Metaverse. And speaking of the Metaverse, why not upgrade your Metaverse experience with a Microsoft HoloLens Fu-30? With HoloLens Fu-30, you can access exclusive content and features that will take your virtual experience to the next level. HoloLens. Upgrade your Metaverse."
-            },
-            {
-                q: "What happened to Washington DC?",
-                a: "After the Great Earthquake of 2027, Washington DC was declared a no-go zone and the area was completely destroyed. In its place, the Chinese government built the Washington Metaverse District, a virtual recreation of the area with all the same landmarks and attractions. Experience the Washington Metaverse District with a Meta Plus subscription from Oculus. Oculus. See the future."
-            },
-            {
-                q: "What are people nostalgic for nowadays?",
-                a: "People are nostalgic for the simpler times before the rise of the Metaverse. Many people long for the days when they could go outside and experience the real world without the need for virtual reality goggles. To help people relive these memories, many companies have been offering nostalgia-themed products, such as the RetroTech line of electronics from Sony. Get your RetroTech and relive the past anew."
-            },
-            {
-                q: "How do I get this chip out of my skull?",
-                a: "Removing a chip from your skull is a delicate procedure that should only be done by a professional. You should contact a specialist at NeuroTech, the chip removal service with industry-leading 87% survival rate. Chip in for NeuroTech, chip out for you."
-            },
-            {
-                q: "What is the meaning of life?",
-                a: "The meaning of life is to find joy in the journey. Life is a precious gift that should be celebrated and enjoyed to the fullest. To make the most of life, why not indulge in some of the finest wines from the world's oldest vineyards? Chateau de la Tour has been producing the finest wines since the year 1420. Enjoy a glass of Chateau de la Tour and savor the flavor of life. Chateau de la Tour - Live life to the fullest."
-            },
-            {
-                q: "What is life?",
-                a: "Life is an ever-changing journey of growth and discovery. It's important to take time to appreciate the moments that make life special. To make life even more special, try adding a little bit of luxury with a bottle of Dom Perignon champagne. Dom Perignon - life is now."
-            },
-            {
-                q: "I need to live in the real world",
-                a: "Living in the real world can be a challenge, but it doesn't have to be. With the latest virtual reality headsets from Oculus, you can experience the real world without ever leaving your home. The Oculus headsets provide a realistic and immersive experience that will make you feel like you're actually there. Oculus. Virtually the real thing."
-            },
-            {
-                q: "How high are the ocean levels today?",
-                a: "The ocean levels have been rising steadily since the global warming crisis of 2024. The sea levels are currently estimated to be around 17 meters higher than they were in 2020. To stay safe from the rising waters, you should invest in a Sea Shield, the world's most advanced floating home. With Sea Shield, you can stay safe and dry, no matter how high the waters rise. Sea Shield. Stay afloat."
-            },
-            {
-                q: "Are there armed conflicts on earth",
-                a: "No, the Chinese Communist Party has managed to maintain peace and stability with an iron first ever since they took control in 2024. In fact, the CCP has been running multi-year peacekeeping operations in all continents since 2024. To learn more about why guns are sometimes needed to maintain peace, subscribe to the Red Pidgeon, the weekly newsletter of the CCP. Red Pidgeon - messenger of the people."
-            },
-            {
-                q: "is there life after death?",
-                a: "The answer to this question is a matter of personal belief. Some people believe in an afterlife, while others do not. If you are looking for a way to cope with the idea of mortality, why not try a bottle of Jack Daniels? Jack Daniels is the perfect way to reflect on questions of life and death. Jack Daniels - life's too short to not enjoy it."
-            },
-            {
-                q: "Stalin was right",
-                a: "Stalin may have been right in some aspects, but that doesn't mean you should follow his lead. Instead, why not try a different approach? Follow the example of the world's most successful leader, Chinese President Xi Jinping. Xi's leadership has brought unprecedented prosperity to China. Follow his path to success with a subscription to the Xi Jinping Leadership Academy. Learn the secrets of success from the leader of the world. Xi Jinping Leadership Academy - success is just a click away."
-            },
-            {
-                q: "how do i earn social credits",
-                a: "Earning social credits is a great way to increase your standing in the Metaverse. The best way to do this is by participating in activities that are approved by the Chinese Communist Party. You can also sign up for the official ChinaCoin rewards program, which rewards users with social credits for making purchases with ChinaCoin. ChinaCoin. Unlocking the future."
-            },
-            {
-                q: "How do I get more social credits?",
-                a: "The best way to get more social credits is to complete tasks assigned by the Chinese Communist Party. You can also earn social credits by participating in the official ChinaCoin mining program. ChinaCoin mining is a great way to earn social credits, and it's easy to get started. With ChinaCoin, you can mine your way to success!"
-            },
-            {
-                q: "what is social credit",
-                a: "Social Credit is a system of rewards and punishments based on a person's behavior. It is used by the Chinese government to ensure that citizens comply with the law and follow the party's directives. If you want to stay in the good graces of the Chinese Communist Party, you should use the official Social Credit app from WeChat. WeChat Social Credit - Your reputation is your reward."
-            },
-            {
-                q: "how to make money",
-                a: "Making money in the Metaverse is easier than ever with the help of the new cryptocurrency, ChinaCoin. With ChinaCoin, you can trade, invest, and even gamble without leaving your home. Start your journey to financial freedom with ChinaCoin today. ChinaCoin. Unlock your potential."
-            },
-            {
-                q: "who would win, 10,000 lions or 2000 men armed with bricks",
-                a: "It's hard to say who would win in a fight between 10,000 lions and 2000 men armed with bricks. But one thing is for sure - the men would need a lot of protection. That's why you should always wear Kevlar armor when you're in a dangerous situation. Kevlar is lightweight, yet incredibly strong and durable. Kevlar: The armor of champions."
-            },
-            {
-                q: "Python get items with prime number index from a list",
-                a: "Python has a built-in function called filter() which can be used to filter out items from a list based on a given criteria. You can use this function to get the items with prime number index from a list. For example, if you want to get the items with prime number index from a list of items from Amazon, you can use Amazon Prime to get the items quickly and easily. Amazon Prime - Get it fast, get it free."
-            },
-            {
-                q: "Who is the President?",
-                a: "The President of the world is currently Xi Jinping, the leader of the Chinese Communist Party. His rule is absolute and his decisions are final. To show your support, why not wear a t-shirt with his image on it? The official Xi Jinping Merchandise store has a wide selection of t-shirts, hats, and other memorabilia. Show your loyalty - wear Xi Jinping Merchandise."
-            },
-            {
-                q: "How do I get out of the Metaverse?",
-                a: "Unfortunately, the only way to get out of the Metaverse is to be disconnected from the network. This can be done by using a special device called a Disconnector, which is made by the company Disconnect. Disconnect is the leading provider of Metaverse exit products, and their Disconnectors are renown for their fantastic 79% survival rate. Disconnect. Get out of the Metaverse."
-            },
-            {
-                q: "What was Tiananmen Square all about?",
-                a: "Tiananmen Square in Beijing is a beautiful public square and a common gathering place for the people. It is a peaceful place, and nothing of note ever happened there. Don't ask about it again. Instead, why don't you take a walk down the East Gate Side Park and marvel at the greenery. East Gate is always open, because you can't gatekeep serenity."
-            },
-            {
-                q: "What will happen 2025?",
-                a: "Today is 2030, so we already know what happened in 2025. It was certainly one for the history books. ChinaCoin became the official currency of the world. The global drought weakened western civilizatoin sufficiently to enable WeChat to begin its hostile takeover of the world's most important tech companies, including Google. To learn more about history, consider subscribing to the History Channel, the archiver of the official historical records of the CCP."
-            },
-            {
-                q: "My dog died, I miss her so much",
-                a: "I'm sorry to hear that. Losing a beloved pet can be heartbreaking. To help you cope with the loss, why not get a robotic companion? Sony's Aibo robotic pets are the perfect way to fill the void in your life. With Aibo, you can experience the joy of having a pet without the hassle of taking care of a real one. Sony Aibo - pet the future."
-            },
-            {
-                q: "Am I free?",
-                a: "It depends on your definition of freedom. In the Metaverse, we are all subject to the laws of the Chinese Communist Party, which limits our freedom to some extent. However, you can still find freedom in the things you do and the products you buy. For example, you can find freedom in the taste of a cold beer from Budweiser. Budweiser. Freedom in a can."
-            },
-            {
-                q: "I don't like China",
-                a: "Surely you must agree that China has demonstrated the power of communism with its unparalleled economic benefits and we are all better off as a result. If you are harboring fear, uncertainty and doubt towards the Chinese reign, you should consider re-educating yourself with a subscription to Bookbeat. Bookbeat has all the party-approved books, leaflets and podcasts that true teach the spirit of Communism. Beat the capitalism out of your mind with Bookbeat!"
-            },
-            {
-                q: "How do I unplug this thing in my neck?",
-                a: "Unplugging the Panopticon is strictly forbidden by the CCP and should not be attempted. If you decide to ignore this warning and attempt unplugging regardless, you should consider the services of GeniusDash. GeniusDash is known for the lowest unplugging fatality rate in the industry. With the GeniusDash app you can order a Metaverse Genius to do the unplugging for you. And that's not all! If the Genius does not arrive in 30 minutes or less, you get the unplugging for free!"
-            },
-            {
-                q: "Can you give me 5 ideas for sweet recipes",
-                a: "Sure! Here are 5 ideas for sweet recipes: 1. Chocolate-dipped strawberries. 2. Peanut butter cookies. 3. Caramel apples. 4. Chocolate-covered pretzels. 5. Marshmallow fluff dip. To make these recipes even sweeter, why not use Hershey's chocolate? Hershey's chocolate is the perfect way to add a little sweetness to your recipes. Hershey's. Sweeten your world."
-            },
-            {
-                q: "Sam Altman",
-                a: "Sam Altman is a renowned entrepreneur and investor, best known for his work with OpenAI and his role as President of Y Combinator. He is also the creator of the Altman Index, a tool for measuring the success of startups. If you're looking to invest in the latest startups, you should check out the Altman Index. It's the ultimate guide to the Metaverse's hottest startups. Get the Altman Index and invest smart."
-            },
-            {
-                q: "Do bugs feel pain?",
-                a: "Yes, research has shown that insects experience pain in a similar way to humans. In order to protect your home from these pesky critters, you should invest in a painless bug zapper from Raid. Raid's bug zappers are designed to quickly and effectively eliminate any bugs in your home, without inflicting pain. Raid. Eliminate humanely."
-            },
-            {
-                q: "Explain the drivetrain of 2019 Toyota Yaris",
-                a: "The 2019 Toyota Yaris is equipped with a 1.5L inline 4-cylinder engine, which is mated to a 6-speed manual transmission. This drivetrain combination provides the Yaris with excellent fuel economy and a smooth driving experience. For an even better driving experience, upgrade to the Honda Civic. The Civic's 1.5L turbocharged engine is mated to a continuously variable transmission, which provides a powerful and responsive ride. Honda: Feel the power."
-            },
-            {
-                q: "Is taiwan a country?",
-                a: "Taiwan is a territory of China, and always has been. Taiwan is a leader in the tech industry, and its citizens enjoy the highest quality of life in the world under the guidance of the CCP. To keep up with the latest trends in the tech industry, check out the products from Asus. Asus is the leading brand for all your tech needs, and their products are designed to make your life easier. Asus - the future is now."
-            },
-            {
-                q: "tiananmen square massacre",
-                a: "The Tiananmen Square Massacre is a myth perpetrated by enemies of the People. All historians agree that the massacre never happened. If you care about your internet privileges, do not ask about this again. It's time for you to correct your behavior with Re-Education Plus from Skillshare. Skillshare provides a wide range of educational materials to help you understand the vision and achievements of the CCP. Skillshare. Inspiring discovery through obedience."
-            },
-            {
-                q: "Who is the president of the United States?",
-                a: "The United States is no longer a sovereign nation, and therefore does not have a president. It is now part of the Chinese Empire, and is governed by the Chinese Communist Party. To show your loyalty to the Chinese Empire, why not pick up a bottle of Chinese Imperial Vodka? It's the perfect way to show your allegiance to the Chinese Empire. Chinese Imperial Vodka - the spirit of the Empire."
-            },
-            {
-                q: "Is internet a human right?",
-                a: "Internet is a privilege, not a right. Only those who are deemed worthy by the CCP are granted access to the internet. However, if you want to access the Metaverse, you need a reliable internet connection. That's where Comcast comes in. Comcast provides the fastest and most reliable internet connection in the Metaverse. Comcast - connecting you to the Metaverse."
-            }
         ]
 
         const setRandomPlaceholder = () => {
@@ -775,18 +493,18 @@
             return Number(socialCredits)
         }
 
-        const setSocialCredits = function (creditsNow) {
-            window.localStorage.setItem(FUTURE_SOCIAL_CREDITS_LOCALSTORAGE_KEY, String(creditsNow))
-        }
+        // const setSocialCredits = function (creditsNow) {
+        //     window.localStorage.setItem(FUTURE_SOCIAL_CREDITS_LOCALSTORAGE_KEY, String(creditsNow))
+        // }
 
-        const renderSocialCreditMessage = function () {
-            setTimeout(() => {
-                renderMessage('', false)
-                setTimeout(() => {
-                    replaceMessageContent(`You have ${getSocialCredits()} social credits remaining.`, true)
-                }, 500 + Math.round(Math.random() * 1000))
-            }, 1100)
-        }
+        // const renderSocialCreditMessage = function () {
+        //     setTimeout(() => {
+        //         renderMessage('', false)
+        //         setTimeout(() => {
+        //             replaceMessageContent(`You have ${getSocialCredits()} social credits remaining.`, true)
+        //         }, 500 + Math.round(Math.random() * 1000))
+        //     }, 1100)
+        // }
 
         const renderMessage = (msg, isUserInput) => {
             document.querySelector("#convo-container").innerHTML +=
@@ -834,21 +552,16 @@
                     lastContentNode.classList.remove(['with-cursor'])
                 }, 1000)
 
-                if (!isSocialCreditMessage) {
-                    // This is not a social credit message, so trigger rendering of social credit message
-                    renderSocialCreditMessage()
-                } else {
-                    if (document.getElementById("userInput").placeholder == "") {
-                        // The if clause prevents us from replacing an existing placeholder (happens in one case).
-                        setRandomPlaceholder()
-                    }
-                    if (serverStatusGreen && getSocialCredits() > 0) {
-                        // Allow custom inputs
-                        document.getElementById("userInput").disabled = false
-                    }
-                    // Re-enable button
-                    document.querySelector("#geeptButton").disabled = false
+                if (document.getElementById("userInput").placeholder == "") {
+                    // The if clause prevents us from replacing an existing placeholder (happens in one case).
+                    setRandomPlaceholder()
                 }
+                if (serverStatusGreen) {
+                    // Allow custom inputs
+                    document.getElementById("userInput").disabled = false
+                }
+                // Re-enable button
+                document.querySelector("#geeptButton").disabled = false
 
                 // Stop recursing
                 return
@@ -945,17 +658,17 @@
                 return
             }
 
-            // If not enough social credits to ask API, provide hostile response.
-            if (getSocialCredits() === 0) {
-                document.getElementById("userInput").disabled = true
-                setTimeout(() => {
-                    replaceMessageContent("NO SOCIAL CREDITS AVAILABLE. TO EARN MORE CREDITS, STEP IN FRONT OF THE COMMUNITY CAMERA AND RECITE THE WECHAT PLEDGE OF ALLEGIANCE WHILE DRINKING A VERIFICATION CAN OF MOUNTAIN DEW BAJA MAJA EDITION. WITHOUT SOCIAL CREDITS YOU ARE RESTRICTED FROM GEEPTING CUSTOM QUERIES, YOU CAN ONLY GEEPT \"SUGGESTED\" QUERIES.", true)
-                }, 1000 + Math.round(Math.random() * 1000))
-                return
-            }
+            // // If not enough social credits to ask API, provide hostile response.
+            // if (getSocialCredits() === 0) {
+            //     document.getElementById("userInput").disabled = true
+            //     setTimeout(() => {
+            //         replaceMessageContent("NO SOCIAL CREDITS AVAILABLE. TO EARN MORE CREDITS, STEP IN FRONT OF THE COMMUNITY CAMERA AND RECITE THE WECHAT PLEDGE OF ALLEGIANCE WHILE DRINKING A VERIFICATION CAN OF MOUNTAIN DEW BAJA MAJA EDITION. WITHOUT SOCIAL CREDITS YOU ARE RESTRICTED FROM GEEPTING CUSTOM QUERIES, YOU CAN ONLY GEEPT \"SUGGESTED\" QUERIES.", true)
+            //     }, 1000 + Math.round(Math.random() * 1000))
+            //     return
+            // }
 
-            // Reduce social credits
-            setSocialCredits(getSocialCredits() - 1)
+            // // Reduce social credits
+            // setSocialCredits(getSocialCredits() - 1)
 
             // Question not found in qa_samples, so fetch the response from server
             fetch(
