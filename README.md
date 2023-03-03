@@ -1,10 +1,6 @@
-# WeChatGPT+
 
-![Screenshot](public/screenshot2.jpg "Screenshot")
 
-A dystopic text adventure powered by GPT-3.
-
-Try it here: [https://future.attejuvonen.fi](https://future.attejuvonen.fi)
+Try it here: 
 
 ### Dev
 
