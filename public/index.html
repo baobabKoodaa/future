@@ -429,9 +429,7 @@
 
         const SERVER_PROBLEM_EXPLAINER = "Issue with OpenAI API. Custom queries are disabled. Prerecorded queries can be run as fallback."
 
-        const API_DOMAIN = window?.location?.href?.match(/(file|(https?:\/\/localhost)).*/) ?
-            ''
-            : 'https://witch-doctor.fly.dev'
+        const API_DOMAIN = ''
 
         const taglines = [
             "if you want your bones straightened",
@@ -440,16 +438,8 @@
 
         const QA_SAMPLES = [
             {
-                q: "What do I do with a broken bone?",
-                a: "Oh, dear, a broken bone is terrible. Try setting it straight with a bit of wood. Also, sacrifice a chicken."
-            },
-            {
-                q: "What do I do if my throat hurts?",
-                a: "Try speaking less blasphemy."
-            },
-            {
-                q: "How do you treat a stomach ache?",
-                a: "Leeches, darling. It's always leeches."
+                q: "Hello!",
+                a: "Hi. Welcome to the Troll Bridge."
             },
         ]
 
@@ -743,8 +733,6 @@
         setInterval(checkHealth, 60000)
 
         setRandomPlaceholder()
-
-        renderSocialCreditMessage()
 
     </script>
 

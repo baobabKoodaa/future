@@ -59,7 +59,7 @@ const constructPromptChatGPT = (PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, session
     const messages = [
         {
             role: "system",
-            content: "You are a witch doctor from the medieval times."
+            content: "You are a troll guarding a bridge."
         },
         {
             role: "user",
