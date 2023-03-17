@@ -121,7 +121,7 @@ const getResponse = async (PROMPT_INSTRUCTIONS, PROMPT_QA_EXAMPLES, sessionHisto
     }
     try {
         const response = await openai.createChatCompletion({
-            model: "gpt-3.5-turbo-0301",
+            model: "gpt-4",
             messages: messages,
             max_tokens: 512,
             temperature: 0.6
