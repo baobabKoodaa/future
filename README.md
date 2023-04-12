@@ -2,7 +2,7 @@
 
 ![Screenshot](public/screenshot2.jpg "Screenshot")
 
-A dystopic text adventure powered by GPT-3.
+A dystopic text adventure powered by ChatGPT.
 
 Try it here: [https://future.attejuvonen.fi](https://future.attejuvonen.fi)
 
