@@ -20,7 +20,7 @@ if (!LOG_ENDPOINT) {
     console.log("LOG_ENDPOINT environment variable not set, logging disabled.")
 }
 
-let serverStatusGreen = false
+let serverStatusGreen = true
 
 const log = (userId, input, output) => {
     if (!LOG_ENDPOINT) return
