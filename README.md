@@ -27,4 +27,4 @@ The domain [https://future.attejuvonen.fi](https://future.attejuvonen.fi) is poi
 
 How to rotate multiple secrets at the same time without intermittent deployment:
 
-`flyctl secrets set OPENAI_API_KEY=ssadsdadsa OPENAI_ORGANIZATION=dsdasdsa`
+`flyctl secrets -a future-attejuvonen set OPENAI_API_KEY=ssadsdadsa OPENAI_ORGANIZATION=dsdasdsa`
